@@ -6,6 +6,7 @@ const { database, username, password, host } = environment;
 const sequelize = new Sequelize(database!, username!, password!, {
 	host: host,
 	dialect: "sqlite",
+	storage: "fleet-manager.sqlite3",
 });
 
 export default sequelize;
