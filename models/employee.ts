@@ -1,14 +1,19 @@
 import { sequelize } from '../config/database'
 import { DataTypes, Model } from 'sequelize'
+import Vehicle from './vehicle'
+import Route from './route'
 
-class User extends Model { }
+class Employee extends Model { }
 
-User.init(
+Employee.init(
   {
-    username: {
+    firstName: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      allowNull: false
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
@@ -19,20 +24,23 @@ User.init(
       type: DataTypes.STRING(64),
       allowNull: false
     },
+    contact: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     role: {
       type: DataTypes.ENUM,
       allowNull: false,
       values: ['admin', 'driver']
-    },
-    contact: {
-      type: DataTypes.STRING,
-      allowNull: false
     }
   },
   {
     sequelize,
-    modelName: 'User'
+    modelName: 'Employee'
   }
 )
 
-export default User
+Employee.hasOne(Vehicle)
+Employee.hasMany(Route)
+
+export default Employee
