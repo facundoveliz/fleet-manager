@@ -9,7 +9,9 @@ dotenv.config()
 app.use(express.json())
 app.use(cors({ credentials: true }))
 
-connectDb()
+connectDb().catch((err) => {
+  console.error('Unable to connect to the database:', err)
+})
 
 const port = process.env.PORT ?? 3000
 app.listen(port, () => {
