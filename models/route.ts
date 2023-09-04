@@ -1,30 +1,22 @@
 import { sequelize } from '../config/database'
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 import Employee from './employee'
 
-class Route extends Model { }
-
-Route.init(
-  {
-    wayPoint: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    distance: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    status: {
-      type: DataTypes.ENUM,
-      allowNull: false,
-      values: ['waiting', 'ongoing', 'completed']
-    }
+const Route = sequelize.define('Route', {
+  wayPoint: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  {
-    sequelize,
-    modelName: 'Route'
+  distance: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.ENUM,
+    allowNull: false,
+    values: ['waiting', 'ongoing', 'completed']
   }
-)
+})
 
 Route.hasOne(Employee)
 
