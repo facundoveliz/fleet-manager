@@ -32,7 +32,7 @@ const Employee = sequelize.define('Employee', {
   }
 })
 
-Employee.hasOne(Vehicle)
-Employee.hasMany(Route)
+// Employee.hasOne(Vehicle)
+// Employee.hasMany(Route)
 
 export default Employee
