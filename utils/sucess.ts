@@ -3,8 +3,8 @@ import { type Response } from 'express'
 const SuccessResponse = async (
   res: Response,
   message: string,
-  data: Record<string, any>,
-  statusCode: number
+  statusCode: number,
+  data: Record<string, any>
   // FIX: change promise
 ): Promise<unknown> => {
   return res.status(statusCode).json({

@@ -27,7 +27,8 @@ const Employee = sequelize.define('Employee', {
   },
   role: {
     type: DataTypes.ENUM,
-    allowNull: false,
+    // FIX: CHANGE THIS
+    allowNull: true,
     values: ['admin', 'driver']
   }
 })
