@@ -1,51 +1,32 @@
 import { type Response, type NextFunction, type Request } from 'express'
 
 class ErrorResponse extends Error {
-  constructor (
-    message: string,
-    statusCode: number,
-    success: boolean = false,
-    data?: Array<Record<string, unknown>>
-  ) {
+  statusCode: number
+  success: boolean
+
+  constructor (statusCode: number, success: boolean, message: string) {
     super(message)
     this.statusCode = statusCode
     this.success = success
-    this.data = data
-    this.name = this.constructor.name
-    Error.captureStackTrace(this, this.constructor)
+    this.message = message
   }
-
-  statusCode: number
-  success: boolean
-  data?: Array<Record<string, unknown>>
 }
 
 export const errorHandlerMiddleware = (
-  error: ErrorResponse,
+  err: ErrorResponse,
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  // Log the error
-  console.error(error)
+  err.statusCode = err.statusCode ?? 500
+  err.success = err.success || false
 
-  const statusCode = error.statusCode !== undefined ? error.statusCode : 500
-  const message = error.message || 'Internal Server Error'
-
-  const response: {
-    success: boolean
-    message: string
-    data?: Array<Record<string, unknown>>
-  } = {
-    success: error.success, // Include the success variable from the error
-    message
-  }
-
-  if (error.data) {
-    response.data = error.data
-  }
-
-  res.status(statusCode).json(response)
+  res.status(err.statusCode).json({
+    success: err.success,
+    error: err,
+    message: err.message,
+    stack: err.stack
+  })
 }
 
 export default ErrorResponse

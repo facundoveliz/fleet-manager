@@ -1,12 +1,11 @@
 import { type Response } from 'express'
 
-const SuccessResponse = async (
+const SuccessResponse = (
   res: Response,
-  message: string,
   statusCode: number,
+  message: string,
   data: Record<string, any>
-  // FIX: change promise
-): Promise<unknown> => {
+): Response => {
   return res.status(statusCode).json({
     success: true,
     message,
