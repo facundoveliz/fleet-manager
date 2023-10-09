@@ -4,7 +4,7 @@ const SuccessResponse = (
   res: Response,
   statusCode: number,
   message: string,
-  data: Record<string, any>
+  data: Record<string, any> | string
 ): Response => {
   return res.status(statusCode).json({
     success: true,

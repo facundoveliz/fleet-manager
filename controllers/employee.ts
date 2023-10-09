@@ -1,5 +1,6 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 import Employee from '../models/employee'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
@@ -92,4 +93,51 @@ export const registerEmployee = async (
     next(error)
     return error
   }
+}
+
+export const loginEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | ErrorResponse> => {
+  const { email, password } = req.body
+
+  // checks if the email is valid
+  const employee: any = await Employee.findOne({
+    where: {
+      email
+    }
+  })
+
+  // if the email doesn't exists, the func ends here
+  if (employee === null) {
+    const error = new ErrorResponse(400, false, 'Invalid email or password')
+    next(error)
+    return error
+  }
+
+  // compares passwords
+  const validPassword = await bcrypt.compare(password, employee.password)
+  if (!validPassword) {
+    const error = new ErrorResponse(400, false, 'Invalid email or password')
+    next(error)
+    return error
+  }
+
+  // generate token and set it to expire in 30 days
+  const token = jwt.sign(
+    { _id: employee.id },
+    process.env.JWT_PRIVATE_KEY as string,
+    {
+      expiresIn: '30d'
+    }
+  )
+
+  const response = SuccessResponse(
+    res,
+    200,
+    'Employee logged successfully',
+    token
+  )
+  return response
 }
