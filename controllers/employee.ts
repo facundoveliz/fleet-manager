@@ -11,7 +11,7 @@ export const getAllEmployees = async (
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    const employees = await Employee.findAll({})
+    const employees = await Employee.findAll()
     const response = SuccessResponse(
       res,
       200,
@@ -72,13 +72,15 @@ export const registerEmployee = async (
     const salt = await bcrypt.genSalt(10)
     const employeePassword = await bcrypt.hash(req.body.password, salt)
 
-    // creates the new user
+    // creates the new employee
     employee = await Employee.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       password: employeePassword,
-      contact: req.body.contact
+      contact: req.body.contact,
+      role: req.body.role,
+      VehicleId: req.body.VehicleId
     })
 
     const response = SuccessResponse(
@@ -140,4 +142,30 @@ export const loginEmployee = async (
     token
   )
   return response
+}
+
+export const deleteEmployee = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | ErrorResponse> => {
+  try {
+    // ensures that the employee that is trying to delete has the same employee that the one who's logged
+    const employee = await Employee.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+    if (employee === 1) {
+      const response = SuccessResponse(res, 200, 'Employee deleted', employee)
+      return response
+    }
+    const error = new ErrorResponse(404, false, 'Employee not found')
+    next(error)
+    return error
+  } catch (err: any) {
+    const error = new ErrorResponse(err.statusCode, false, err.message)
+    next(error)
+    return error
+  }
 }

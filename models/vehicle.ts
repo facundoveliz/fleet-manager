@@ -5,8 +5,8 @@ import Employee from './employee'
 const Vehicle = sequelize.define('Vehicle', {
   licencePlate: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true
+    primaryKey: true,
+    allowNull: false
   },
   model: {
     type: DataTypes.STRING,
@@ -15,7 +15,7 @@ const Vehicle = sequelize.define('Vehicle', {
   location: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: false
   },
   status: {
     type: DataTypes.ENUM,
@@ -23,7 +23,5 @@ const Vehicle = sequelize.define('Vehicle', {
     values: ['operational', 'inactive']
   }
 })
-
-Vehicle.belongsTo(Employee)
 
 export default Vehicle

@@ -1,7 +1,6 @@
 import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
 import Vehicle from './vehicle'
-import Route from './route'
 
 const Employee = sequelize.define('Employee', {
   firstName: {
@@ -15,7 +14,10 @@ const Employee = sequelize.define('Employee', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
+    validate: {
+      isEmail: true
+    }
   },
   password: {
     type: DataTypes.STRING(64),
@@ -27,13 +29,21 @@ const Employee = sequelize.define('Employee', {
   },
   role: {
     type: DataTypes.ENUM,
-    // FIX: CHANGE THIS
-    allowNull: true,
-    values: ['admin', 'driver']
+    allowNull: false,
+    // FIX: this
+    values: ['manager', 'driver']
+  },
+  VehicleId: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+    references: {
+      model: Vehicle,
+      key: 'licencePlate'
+    }
   }
 })
 
-// Employee.hasOne(Vehicle)
-// Employee.hasMany(Route)
+Employee.hasOne(Vehicle)
+Vehicle.belongsTo(Employee)
 
 export default Employee
