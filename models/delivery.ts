@@ -1,13 +1,13 @@
 import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
 
-const Route = sequelize.define('Route', {
-  wayPoints: {
-    type: DataTypes.JSON,
+const Delivery = sequelize.define('Delivery', {
+  description: {
+    type: DataTypes.STRING,
     allowNull: false
   },
-  distance: {
-    type: DataTypes.STRING,
+  wayPoints: {
+    type: DataTypes.JSON,
     allowNull: false
   },
   status: {
@@ -19,4 +19,4 @@ const Route = sequelize.define('Route', {
   }
 })
 
-export default Route
+export default Delivery
