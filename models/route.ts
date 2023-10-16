@@ -1,10 +1,9 @@
 import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
-import Employee from './employee'
 
 const Route = sequelize.define('Route', {
-  wayPoint: {
-    type: DataTypes.STRING,
+  wayPoints: {
+    type: DataTypes.JSON,
     allowNull: false
   },
   distance: {
@@ -12,12 +11,12 @@ const Route = sequelize.define('Route', {
     allowNull: false
   },
   status: {
-    type: DataTypes.ENUM,
+    type: DataTypes.STRING,
     allowNull: false,
-    values: ['waiting', 'ongoing', 'completed']
+    validate: {
+      isIn: [['waiting', 'ongoing', 'completed']]
+    }
   }
 })
-
-Route.hasOne(Employee)
 
 export default Route
