@@ -1,6 +1,5 @@
 import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
-import Employee from './employee'
 
 const Vehicle = sequelize.define('Vehicle', {
   licencePlate: {

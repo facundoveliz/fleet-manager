@@ -1,7 +1,7 @@
 import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
 import Vehicle from './vehicle'
-import Route from './route'
+import Delivery from './delivery'
 
 const Employee = sequelize.define('Employee', {
   firstName: {
@@ -34,29 +34,21 @@ const Employee = sequelize.define('Employee', {
     validate: {
       isIn: [['manager', 'driver']]
     }
-  },
-  VehicleId: {
-    type: DataTypes.STRING,
-    defaultValue: null,
-    references: {
-      model: Vehicle,
-      key: 'licencePlate'
-    }
-  },
-  RouteId: {
-    type: DataTypes.STRING,
-    defaultValue: null,
-    references: {
-      model: Route,
-      key: 'id'
-    }
   }
 })
 
-Employee.hasOne(Vehicle)
-Vehicle.belongsTo(Employee)
+// NOTE: remove all this after doing the migrations,
+// these won't work by themselves without them.
+// source: https://stackoverflow.com/questions/66290930/sequelize-defining-associations
+// FIX: check what 'foreignKey' to remove from here
 
-Employee.hasOne(Route)
-Route.belongsTo(Employee)
+Employee.hasOne(Vehicle, { foreignKey: 'employeeId' })
+Employee.hasMany(Delivery, { foreignKey: 'employeeId' })
+
+Vehicle.belongsTo(Employee, { foreignKey: 'employeeId' })
+Vehicle.hasMany(Delivery, { foreignKey: 'vehicleId' })
+
+Delivery.belongsTo(Employee, { foreignKey: 'employeeId' })
+Delivery.belongsTo(Vehicle, { foreignKey: 'vehicleId' })
 
 export default Employee
