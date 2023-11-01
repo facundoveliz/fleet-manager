@@ -7,7 +7,9 @@ const Delivery = sequelize.define('Delivery', {
     allowNull: false
   },
   wayPoints: {
-    type: DataTypes.JSON,
+    // NOTE: maybe change this to JSON,
+    // decide later
+    type: DataTypes.STRING,
     allowNull: false
   },
   status: {
