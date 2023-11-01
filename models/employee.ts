@@ -40,15 +40,15 @@ const Employee = sequelize.define('Employee', {
 // NOTE: remove all this after doing the migrations,
 // these won't work by themselves without them.
 // source: https://stackoverflow.com/questions/66290930/sequelize-defining-associations
-// FIX: check what 'foreignKey' to remove from here
 
 Employee.hasOne(Vehicle, { foreignKey: 'employeeId' })
 Employee.hasMany(Delivery, { foreignKey: 'employeeId' })
 
 Vehicle.belongsTo(Employee, { foreignKey: 'employeeId' })
+Delivery.belongsTo(Employee, { foreignKey: 'employeeId' })
+
+Delivery.belongsTo(Vehicle, { foreignKey: 'vehicleId' })
 Vehicle.hasMany(Delivery, { foreignKey: 'vehicleId' })
 
-Delivery.belongsTo(Employee, { foreignKey: 'employeeId' })
-Delivery.belongsTo(Vehicle, { foreignKey: 'vehicleId' })
 
 export default Employee

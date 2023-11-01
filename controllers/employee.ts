@@ -150,7 +150,6 @@ export const deleteEmployee = async (
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    // ensures that the employee that is trying to delete has the same employee that the one who's logged
     const employee = await Employee.destroy({
       where: {
         id: req.params.id

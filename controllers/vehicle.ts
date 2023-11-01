@@ -86,7 +86,6 @@ export const deleteVehicle = async (
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    // ensures that the vehicle that is trying to delete has the same vehicle that the one who's logged
     const vehicle = await Vehicle.destroy({
       where: {
         licencePlate: req.params.id
