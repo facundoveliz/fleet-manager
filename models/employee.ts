@@ -2,6 +2,7 @@ import { sequelize } from '../config/database'
 import { DataTypes } from 'sequelize'
 import Vehicle from './vehicle'
 import Delivery from './delivery'
+import Client from './client'
 
 const Employee = sequelize.define('Employee', {
   firstName: {
@@ -24,9 +25,12 @@ const Employee = sequelize.define('Employee', {
     type: DataTypes.STRING(64),
     allowNull: false
   },
-  contact: {
+  phone: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      is: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i
+    }
   },
   role: {
     type: DataTypes.STRING,
@@ -42,13 +46,30 @@ const Employee = sequelize.define('Employee', {
 // source: https://stackoverflow.com/questions/66290930/sequelize-defining-associations
 
 Employee.hasOne(Vehicle, { foreignKey: 'employeeId' })
-Employee.hasMany(Delivery, { foreignKey: 'employeeId' })
+Employee.hasMany(Delivery, {
+  foreignKey: {
+    name: 'employeeId',
+    allowNull: false
+  }
+})
 
-Vehicle.belongsTo(Employee, { foreignKey: 'employeeId' })
+Vehicle.belongsTo(Employee, { foreignKey: 'licencePlate' })
+Vehicle.hasMany(Delivery, {
+  foreignKey: {
+    name: 'licencePlate',
+    allowNull: false
+  }
+})
+
+Delivery.hasOne(Client, { foreignKey: 'deliveryId' })
+Client.hasMany(Delivery, {
+  foreignKey: {
+    name: 'clientId',
+    allowNull: false
+  }
+})
+
+Delivery.belongsTo(Vehicle, { foreignKey: 'licencePlate' })
 Delivery.belongsTo(Employee, { foreignKey: 'employeeId' })
-
-Delivery.belongsTo(Vehicle, { foreignKey: 'vehicleId' })
-Vehicle.hasMany(Delivery, { foreignKey: 'vehicleId' })
-
 
 export default Employee

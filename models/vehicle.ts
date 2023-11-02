@@ -5,7 +5,10 @@ const Vehicle = sequelize.define('Vehicle', {
   licencePlate: {
     type: DataTypes.STRING,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      is: /^[A-Z]{3}-\d{3}$/i
+    }
   },
   model: {
     type: DataTypes.STRING,

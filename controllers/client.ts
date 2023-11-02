@@ -1,20 +1,22 @@
 import { type Response, type NextFunction, type Request } from 'express'
-import Delivery from '../models/delivery'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import Client from '../models/client'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
 
-export const getAllDeliveries = async (
+export const getAllClients = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    const deliveries = await Delivery.findAll()
+    const clients = await Client.findAll()
     const response = SuccessResponse(
       res,
       200,
-      'Deliveries retrieved successfully',
-      deliveries
+      'Clients retrieved successfully',
+      clients
     )
     return response
   } catch (err: any) {
@@ -24,23 +26,23 @@ export const getAllDeliveries = async (
   }
 }
 
-export const getDelivery = async (
+export const getClient = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    const delivery = await Delivery.findByPk(req.params.id)
-    if (delivery === null) {
-      const error = new ErrorResponse(404, false, 'Delivery not found')
+    const client = await Client.findByPk(req.params.id)
+    if (client === null) {
+      const error = new ErrorResponse(404, false, 'Client not found')
       next(error)
       return error
     } else {
       const response = SuccessResponse(
         res,
         200,
-        'Delivery retrieved successfully',
-        delivery
+        'Client retrieved successfully',
+        client
       )
       return response
     }
@@ -51,27 +53,35 @@ export const getDelivery = async (
   }
 }
 
-export const createDelivery = async (
+export const registerClient = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    // creates the new delivery
-    const delivery = await Delivery.create({
-      description: req.body.description,
-      wayPoints: req.body.wayPoints,
-      status: req.body.status,
-      employeeId: req.body.employeeId,
-      licencePlate: req.body.licencePlate,
-      clientId: req.body.clientId
+    // checks if the email doesn't exists
+    let client = await Client.findOne({ where: { email: req.body.email } })
+    // if the email exists, the func ends here
+    if (client != null) {
+      const error = new ErrorResponse(400, false, 'Email already exists')
+      next(error)
+      return error
+    }
+
+    // creates the new client
+    client = await Client.create({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      phone: req.body.phone,
+      company: req.body.company
     })
 
     const response = SuccessResponse(
       res,
       200,
-      'Delivery created successfully',
-      delivery
+      'Client created successfully',
+      client
     )
     return response
   } catch (err: any) {
@@ -81,22 +91,22 @@ export const createDelivery = async (
   }
 }
 
-export const deleteDelivery = async (
+export const deleteClient = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    const delivery = await Delivery.destroy({
+    const client = await Client.destroy({
       where: {
-        licencePlate: req.params.id
+        id: req.params.id
       }
     })
-    if (delivery === 1) {
-      const response = SuccessResponse(res, 200, 'Delivery deleted', delivery)
+    if (client === 1) {
+      const response = SuccessResponse(res, 200, 'Client deleted', client)
       return response
     }
-    const error = new ErrorResponse(404, false, 'Delivery not found')
+    const error = new ErrorResponse(404, false, 'Client not found')
     next(error)
     return error
   } catch (err: any) {

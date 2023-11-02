@@ -78,7 +78,7 @@ export const registerEmployee = async (
       lastName: req.body.lastName,
       email: req.body.email,
       password: employeePassword,
-      contact: req.body.contact,
+      phone: req.body.phone,
       role: req.body.role,
       VehicleId: req.body.VehicleId
     })
