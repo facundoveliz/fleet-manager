@@ -4,16 +4,19 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [ "standard-with-typescript", tseslint.configs.disableTypeChecked ],
+  extends: ["standard-with-typescript", tseslint.configs.disableTypeChecked],
   overrides: [
     {
       env: {
         node: true,
       },
-      files: [".eslintrc.{js,cjs}"],
+      files: [".eslintrc.{js,cjs}", "tests/**/*"],
       parserOptions: {
         sourceType: "script",
       },
+      env: {
+        jest: true
+      }
     },
   ],
   parserOptions: {

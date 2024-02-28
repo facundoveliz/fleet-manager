@@ -11,18 +11,18 @@ export const getAllEmployees = async (
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   try {
-    const employees = await Employee.findAll()
-    const response = SuccessResponse(
-      res,
-      200,
-      'Employees retrieved successfully',
-      employees
-    )
-    return response
+    const employees = await Employee.findAll({
+      attributes: ['firstName', 'lastName', 'email', 'phone', 'role'], // Exclude sensitive data
+    });
+
+    const response = SuccessResponse(res, 200, 'Employees retrieved successfully', employees);
+    return response;
   } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    const errorResponse = new ErrorResponse(statusCode, false, message);
+    next(errorResponse)
+    return errorResponse
   }
 }
 
@@ -57,45 +57,37 @@ export const registerEmployee = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<Response | ErrorResponse> => {
+): Promise<Response | void> => {
   try {
-    // checks if the email doesn't exists
-    let employee = await Employee.findOne({ where: { email: req.body.email } })
-    // if the email exists, the func ends here
-    if (employee != null) {
-      const error = new ErrorResponse(400, false, 'Email already exists')
-      next(error)
-      return error
+    // Check if the email already exists
+    let existingEmployee = await Employee.findOne({ where: { email: req.body.email } });
+    if (existingEmployee) {
+      return res.status(400).json({ success: false, message: 'Email already exists' });
     }
 
-    // hash the password
-    const salt = await bcrypt.genSalt(10)
-    const employeePassword = await bcrypt.hash(req.body.password, salt)
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    // creates the new employee
-    employee = await Employee.create({
+    // Create the new employee
+    const newEmployee = await Employee.create({
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: employeePassword,
+      password: hashedPassword,
       phone: req.body.phone,
       role: req.body.role,
       VehicleId: req.body.VehicleId
-    })
+    });
 
-    const response = SuccessResponse(
-      res,
-      200,
-      'Employee created successfully',
-      employee
-    )
-    return response
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
+    return SuccessResponse(res, 200, 'Employee created successfully', newEmployee);
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    const message = error.message || 'Internal Server Error';
+    const errorResponse = new ErrorResponse(statusCode, false, message);
+    next(errorResponse);
   }
-}
+};
 
 export const loginEmployee = async (
   req: Request,
