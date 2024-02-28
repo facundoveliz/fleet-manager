@@ -1,9 +1,11 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import Client from '../models/client'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
+import db from '../models'
+
+const Client = db.Client
 
 export const getAllClients = async (
   req: Request,

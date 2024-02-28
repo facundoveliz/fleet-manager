@@ -1,7 +1,9 @@
 import { type Response, type NextFunction, type Request } from 'express'
-import Delivery from '../models/delivery'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
+import db from '../models'
+
+const Delivery = db.Delivery
 
 export const getAllDeliveries = async (
   req: Request,

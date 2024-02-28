@@ -1,7 +1,9 @@
 import { type Response, type NextFunction, type Request } from 'express'
-import Vehicle from '../models/vehicle'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
+import db from '../models'
+
+const Vehicle = db.Vehicle
 
 export const getAllVehicles = async (
   req: Request,
