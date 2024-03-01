@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import db from '../models'
 import SuccessResponse from '../utils/success'
-import ErrorResponse from '../utils/error'
+import ErrorResponse, { errorHandlerMiddleware } from '../utils/error'
+import { tryCatch } from '../utils/tryCatch'
 
 const Employee = db.Employee
 
@@ -12,20 +13,12 @@ export const getAllEmployees = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const employees = await Employee.findAll({
-      attributes: ['firstName', 'lastName', 'email', 'phone', 'role'], // Exclude sensitive data
-    });
+  const employees = await Employee.findAll({
+    attributes: ['firstName', 'lastName', 'email', 'phone', 'role'], // Exclude sensitive data
+  });
 
-    const response = SuccessResponse(res, 200, 'Employees retrieved successfully', employees);
-    return response;
-  } catch (err: any) {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Internal Server Error';
-    const errorResponse = new ErrorResponse(statusCode, false, message);
-    next(errorResponse)
-    return errorResponse
-  }
+  const response = SuccessResponse(res, 200, 'Employees retrieved successfully', employees);
+  return response;
 }
 
 export const getEmployee = async (
@@ -33,25 +26,19 @@ export const getEmployee = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const employee = await Employee.findByPk(req.params.id)
-    if (employee === null) {
-      const error = new ErrorResponse(404, false, 'Employee not found')
-      next(error)
-      return error
-    } else {
-      const response = SuccessResponse(
-        res,
-        200,
-        'Employee retrieved successfully',
-        employee
-      )
-      return response
-    }
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
+  const employee = await Employee.findByPk(req.params.id)
+  if (employee === null) {
+    const error = new ErrorResponse(404, false, 'Employee not found')
     next(error)
     return error
+  } else {
+    const response = SuccessResponse(
+      res,
+      200,
+      'Employee retrieved successfully',
+      employee
+    )
+    return response
   }
 }
 
@@ -60,48 +47,40 @@ export const registerEmployee = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  try {
-    // Check if the email already exists
-    let existingEmployee = await Employee.findOne({ where: { email: req.body.email } });
-    if (existingEmployee) {
-      return res.status(400).json({ success: false, message: 'Email already exists' });
-    }
-
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-    // Validate password length
-    if (req.body.password.length < 8) {
-      const errorResponse = new ErrorResponse(400, false, "Validation error: Name must be between 3 and 25 characters");
-      next(errorResponse);
-    }
-
-    // Create the new employee
-    const newEmployee = await Employee.create({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hashedPassword,
-      phone: req.body.phone,
-      role: req.body.role,
-      VehicleId: req.body.VehicleId
-    });
-
-    return SuccessResponse(res, 200, 'Employee created successfully', newEmployee);
-  } catch (error: any) {
-    const statusCode = error.statusCode || 500;
-    const message = error.message || 'Internal Server Error';
-    const errorResponse = new ErrorResponse(statusCode, false, message);
-    next(errorResponse);
+  // Check if the email already exists
+  let existingEmployee = await Employee.findOne({ where: { email: req.body.email } });
+  if (existingEmployee) {
+    throw new ErrorResponse(400, false, 'Email already exists');
   }
+
+  // Hash the password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+  // Validate password length
+  if (req.body.password.length < 8) {
+    throw new ErrorResponse(400, false, 'Validation error: Password must be between 8 and 64 characters');
+  }
+
+  // Create the new employee
+  const newEmployee = await Employee.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: hashedPassword,
+    phone: req.body.phone,
+    role: req.body.role,
+    VehicleId: req.body.VehicleId
+  });
+
+  return SuccessResponse(res, 200, 'Employee created successfully', newEmployee);
 };
 
 export const loginEmployee = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<Response | ErrorResponse> => {
+): Promise<Response | ErrorResponse | void> => {
   const { email, password } = req.body
 
   // checks if the email is valid
@@ -112,18 +91,14 @@ export const loginEmployee = async (
   })
 
   // if the email doesn't exists, the func ends here
-  if (employee === null) {
-    const error = new ErrorResponse(400, false, 'Invalid email or password')
-    next(error)
-    return error
+  if (!employee) {
+    throw new ErrorResponse(400, false, 'Invalid email or password');
   }
 
   // compares passwords
   const validPassword = await bcrypt.compare(password, employee.password)
   if (!validPassword) {
-    const error = new ErrorResponse(400, false, 'Invalid email or password')
-    next(error)
-    return error
+    throw new ErrorResponse(400, false, 'Invalid email or password');
   }
 
   // generate token and set it to expire in 30 days
@@ -149,22 +124,14 @@ export const deleteEmployee = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const employee = await Employee.destroy({
-      where: {
-        id: req.params.id
-      }
-    })
-    if (employee === 1) {
-      const response = SuccessResponse(res, 200, 'Employee deleted', employee)
-      return response
+  const employee = await Employee.destroy({
+    where: {
+      id: req.params.id
     }
-    const error = new ErrorResponse(404, false, 'Employee not found')
-    next(error)
-    return error
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
+  })
+  if (employee === 1) {
+    const response = SuccessResponse(res, 200, 'Employee deleted', employee)
+    return response
   }
+  throw new ErrorResponse(404, false, 'Employee not found');
 }

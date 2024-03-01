@@ -5,12 +5,13 @@ import {
   getAllDeliveries,
   getDelivery
 } from '../controllers/delivery'
+import { tryCatch } from '../utils/tryCatch'
 
 const router = express.Router()
 
-router.get('/', getAllDeliveries)
-router.get('/:id', getDelivery)
-router.post('/new', createDelivery)
-router.delete('/:id', deleteDelivery)
+router.get('/', tryCatch(getAllDeliveries))
+router.get('/:id', tryCatch(getDelivery))
+router.post('/new', tryCatch(createDelivery))
+router.delete('/:id', tryCatch(deleteDelivery))
 
 export default router

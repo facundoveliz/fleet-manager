@@ -5,12 +5,13 @@ import {
   registerClient,
   deleteClient
 } from '../controllers/client'
+import { tryCatch } from '../utils/tryCatch'
 
 const router = express.Router()
 
-router.get('/', getAllClients)
-router.get('/:id', getClient)
-router.post('/register', registerClient)
-router.delete('/:id', deleteClient)
+router.get('/', tryCatch(getAllClients))
+router.get('/:id', tryCatch(getClient))
+router.post('/register', tryCatch(registerClient))
+router.delete('/:id', tryCatch(deleteClient))
 
 export default router

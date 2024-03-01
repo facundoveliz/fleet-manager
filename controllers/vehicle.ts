@@ -10,20 +10,14 @@ export const getAllVehicles = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const vehicles = await Vehicle.findAll()
-    const response = SuccessResponse(
-      res,
-      200,
-      'Vehicles retrieved successfully',
-      vehicles
-    )
-    return response
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
-  }
+  const vehicles = await Vehicle.findAll()
+  const response = SuccessResponse(
+    res,
+    200,
+    'Vehicles retrieved successfully',
+    vehicles
+  )
+  return response
 }
 
 export const getVehicle = async (
@@ -31,25 +25,17 @@ export const getVehicle = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const vehicle = await Vehicle.findByPk(req.params.id)
-    if (vehicle === null) {
-      const error = new ErrorResponse(404, false, 'Vehicle not found')
-      next(error)
-      return error
-    } else {
-      const response = SuccessResponse(
-        res,
-        200,
-        'Vehicle retrieved successfully',
-        vehicle
-      )
-      return response
-    }
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
+  const vehicle = await Vehicle.findByPk(req.params.id)
+  if (vehicle === null) {
+    throw new ErrorResponse(404, false, 'Vehicle not found');
+  } else {
+    const response = SuccessResponse(
+      res,
+      200,
+      'Vehicle retrieved successfully',
+      vehicle
+    )
+    return response
   }
 }
 
@@ -58,28 +44,22 @@ export const createVehicle = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    // creates the new vehicle
-    const vehicle = await Vehicle.create({
-      licencePlate: req.body.licencePlate,
-      model: req.body.model,
-      location: req.body.location,
-      status: req.body.status,
-      EmployeeId: req.body.EmployeeId
-    })
+  // creates the new vehicle
+  const vehicle = await Vehicle.create({
+    licencePlate: req.body.licencePlate,
+    model: req.body.model,
+    location: req.body.location,
+    status: req.body.status,
+    EmployeeId: req.body.EmployeeId
+  })
 
-    const response = SuccessResponse(
-      res,
-      200,
-      'Vehicle created successfully',
-      vehicle
-    )
-    return response
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
-  }
+  const response = SuccessResponse(
+    res,
+    200,
+    'Vehicle created successfully',
+    vehicle
+  )
+  return response
 }
 
 export const deleteVehicle = async (
@@ -87,22 +67,14 @@ export const deleteVehicle = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  try {
-    const vehicle = await Vehicle.destroy({
-      where: {
-        licencePlate: req.params.id
-      }
-    })
-    if (vehicle === 1) {
-      const response = SuccessResponse(res, 200, 'Vehicle deleted', vehicle)
-      return response
+  const vehicle = await Vehicle.destroy({
+    where: {
+      licencePlate: req.params.id
     }
-    const error = new ErrorResponse(404, false, 'Vehicle not found')
-    next(error)
-    return error
-  } catch (err: any) {
-    const error = new ErrorResponse(err.statusCode, false, err.message)
-    next(error)
-    return error
+  })
+  if (vehicle === 1) {
+    const response = SuccessResponse(res, 200, 'Vehicle deleted', vehicle)
+    return response
   }
+  throw new ErrorResponse(404, false, 'Vehicle not found');
 }

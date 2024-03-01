@@ -5,12 +5,13 @@ import {
   createVehicle,
   deleteVehicle
 } from '../controllers/vehicle'
+import { tryCatch } from '../utils/tryCatch'
 
 const router = express.Router()
 
-router.get('/', getAllVehicles)
-router.get('/:id', getVehicle)
-router.post('/new', createVehicle)
-router.delete('/:id', deleteVehicle)
+router.get('/', tryCatch(getAllVehicles))
+router.get('/:id', tryCatch(getVehicle))
+router.post('/new', tryCatch(createVehicle))
+router.delete('/:id', tryCatch(deleteVehicle))
 
 export default router

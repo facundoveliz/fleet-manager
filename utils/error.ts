@@ -1,32 +1,35 @@
-import { type Response, type NextFunction, type Request } from 'express'
+import { Response, NextFunction, Request } from 'express';
 
 class ErrorResponse extends Error {
-  statusCode: number
-  success: boolean
+  statusCode: number;
+  success: boolean;
+  message: string;
 
-  constructor (statusCode: number, success: boolean, message: string) {
-    super(message)
-    this.statusCode = statusCode
-    this.success = success
-    this.message = message
+  constructor(statusCode: number, success: boolean, message: string) {
+    super(message);
+    this.statusCode = statusCode;
+    this.success = success;
+    this.message = message;
   }
 }
 
 export const errorHandlerMiddleware = (
-  err: ErrorResponse,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
-  err.statusCode = err.statusCode ?? 500
-  err.success = err.success || false
-
-  res.status(err.statusCode).json({
-    success: err.success,
-    error: err,
-    message: err.message,
-    stack: err.stack
-  })
-}
+) => {
+  console.log(err, err.message);
+  if (err instanceof ErrorResponse) {
+    return res.status(err.statusCode).json({
+      success: err.success,
+      message: err.message,
+    });
+  }
+  return res.status(500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+};
 
 export default ErrorResponse
