@@ -35,18 +35,28 @@ export default (sequelize: any, DataTypes: any) => {
   Delivery.init({
     description: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Description cannot be empty" },
+        len: { args: [5, 255], msg: "Description must be between 5 and 255 characters" }
+      }
     },
     wayPoints: {
-      // NOTE: maybe change this to JSON, decide later
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Waypoints cannot be empty" },
+      }
     },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['waiting', 'ongoing', 'completed']]
+        notEmpty: { msg: "Status cannot be empty" },
+        isIn: {
+          args: [['waiting', 'ongoing', 'completed']],
+          msg: "Status must be either 'waiting', 'ongoing', or 'completed'"
+        }
       }
     }
   }, {

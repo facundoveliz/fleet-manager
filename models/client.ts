@@ -36,31 +36,48 @@ export default (sequelize: any, DataTypes: any) => {
   Client.init({
     firstName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "First name cannot be empty" },
+        len: { args: [3, 25], msg: "First name must be between 3 and 25 characters" }
+      }
     },
     lastName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Last name cannot be empty" },
+        len: { args: [3, 25], msg: "Last name must be between 3 and 25 characters" }
+      }
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true
+        notEmpty: { msg: "Email cannot be empty" },
+        isEmail: { msg: "Invalid email format" }
       }
     },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        is: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i
+        notEmpty: { msg: "Phone cannot be empty" },
+        is: {
+          args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
+          msg: "Invalid phone number format"
+        }
       }
     },
     company: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        notEmpty: { msg: "Company name cannot be empty" },
+        len: { args: [3, 255], msg: "Company name must be between 3 and 255 characters" }
+      }
     }
   }, {
     sequelize,

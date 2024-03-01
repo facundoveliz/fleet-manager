@@ -41,24 +41,38 @@ export default (sequelize: any, DataTypes: any) => {
       primaryKey: true,
       allowNull: false,
       validate: {
-        is: /^[A-Z]{3}-\d{3}$/i
+        notEmpty: { msg: "Licence plate cannot be empty" },
+        is: /^[A-Z]{3}-\d{3}$/i,
+        msg: "License plate must be in format XXX-YYY (3 letters followed by 3 digits)"
       }
     },
     model: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Model name cannot be empty" },
+        len: { args: [2, 50], msg: "Model name must be between 2 and 50 characters" }
+      }
     },
     location: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
+      allowNull: false
+      validate: {
+        notEmpty: { msg: "Location cannot be empty" },
+      }
     },
     status: {
-      type: DataTypes.ENUM,
+      type: DataTypes.STRING,
       allowNull: false,
-      values: ['operational', 'inactive']
-    }
-  }, {
+      validate: {
+        notEmpty: { msg: "Role cannot be empty" },
+        isIn: {
+          args: [['operational', 'inactive']],
+          msg: "Role must be either 'operational' or 'inactive'"
+        }
+      }
+
+    }, {
     sequelize,
     modelName: 'Vehicle',
   });
