@@ -63,7 +63,7 @@ export default (sequelize: any, DataTypes: any) => {
       allowNull: false,
       unique: true,
       validate: {
-        notEmpty: { msg: "Password cannot be empty" },
+        notEmpty: { msg: "Email cannot be empty" },
         isEmail: { msg: "Invalid email format" }
       }
     },
