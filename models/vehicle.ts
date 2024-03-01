@@ -56,7 +56,7 @@ export default (sequelize: any, DataTypes: any) => {
     },
     location: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
       validate: {
         notEmpty: { msg: "Location cannot be empty" },
       }
@@ -71,8 +71,8 @@ export default (sequelize: any, DataTypes: any) => {
           msg: "Role must be either 'operational' or 'inactive'"
         }
       }
-
-    }, {
+    }
+  }, {
     sequelize,
     modelName: 'Vehicle',
   });
