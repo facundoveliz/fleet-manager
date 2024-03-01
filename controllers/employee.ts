@@ -71,6 +71,12 @@ export const registerEmployee = async (
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
+    // Validate password length
+    if (req.body.password.length < 8) {
+      const errorResponse = new ErrorResponse(400, false, "Validation error: Name must be between 3 and 25 characters");
+      next(errorResponse);
+    }
+
     // Create the new employee
     const newEmployee = await Employee.create({
       firstName: req.body.firstName,
