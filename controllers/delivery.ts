@@ -51,7 +51,6 @@ export const createDelivery = async (
     status: req.body.status,
     employeeId: req.body.employeeId,
     licencePlate: req.body.licencePlate,
-    clientId: req.body.clientId
   })
 
   const response = SuccessResponse(
