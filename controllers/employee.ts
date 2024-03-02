@@ -28,9 +28,7 @@ export const getEmployee = async (
 ): Promise<Response | ErrorResponse> => {
   const employee = await Employee.findByPk(req.params.id)
   if (employee === null) {
-    const error = new ErrorResponse(404, false, 'Employee not found')
-    next(error)
-    return error
+    throw new ErrorResponse(404, false, 'Employee not found');
   } else {
     const response = SuccessResponse(
       res,
