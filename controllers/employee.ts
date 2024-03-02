@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import db from '../models'
 import SuccessResponse from '../utils/success'
-import ErrorResponse from '../utils/error'
+import ErrorResponse, { errorHandlerMiddleware } from '../utils/error'
+import { tryCatch } from '../utils/tryCatch'
 
 const Employee = db.Employee
 

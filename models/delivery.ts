@@ -19,6 +19,10 @@ export default (sequelize: any, DataTypes: any) => {
     wayPoints!: string;
     status!: 'waiting' | 'ongoing' | 'completed';
     static associate(models: any) {
+      // 1-to-1 relationship between Delivery and Client
+      // A delivery is associated with one client identified by its delivery ID.
+      Delivery.hasOne(models.Client, { foreignKey: 'deliveryId' })
+
       // Inverse association of Delivery to Employee
       // A delivery is associated with an employee identified by their ID.
       Delivery.belongsTo(models.Vehicle, { foreignKey: 'licencePlate' })
