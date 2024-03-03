@@ -2,12 +2,12 @@
 import { Model } from 'sequelize';
 
 interface DriverAttributes {
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-  phone: string,
-  role: string,
+  driverId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone: string;
 }
 
 export default (sequelize: any, DataTypes: any) => {
@@ -18,15 +18,22 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    driverId!: number;
     firstName!: string;
     lastName!: string;
     email!: string;
     password!: string;
     phone!: string;
-    role!: string;
-    static associate(models: any) { }
+    static associate(models: any) {
+      Driver.hasMany(models.Order);
+    }
   }
   Driver.init({
+    driverId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     firstName: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -71,17 +78,6 @@ export default (sequelize: any, DataTypes: any) => {
         }
       }
     },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: "Role cannot be empty" },
-        isIn: {
-          args: [['manager', 'driver']],
-          msg: "Role must be either 'manager' or 'driver'"
-        }
-      }
-    }
   }, {
     sequelize,
     modelName: 'Driver',

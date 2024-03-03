@@ -10,7 +10,7 @@ app.use('/api/drivers/', driverRoutes)
 
 dotenv.config()
 
-const Driver = db.driver
+const Driver = db.Driver
 
 describe('Get All Drivers', () => {
   beforeAll(async () => {
@@ -24,7 +24,6 @@ describe('Get All Drivers', () => {
           email: `johndoe${index}@example.com`,
           password: 'password',
           phone: `${1234567890 + index}`,
-          role: 'manager'
         });
     }
   });
@@ -47,7 +46,6 @@ describe('Get All Drivers', () => {
           lastName: expect.any(String),
           email: expect.any(String),
           phone: expect.any(String),
-          role: expect.any(String)
         })
       );
     });
@@ -67,9 +65,8 @@ describe('Get Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
-    createdDriver = response.body.data.id;
+    createdDriver = response.body.data.driverId;
   });
 
   afterEach(async () => {
@@ -82,7 +79,7 @@ describe('Get Driver', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toEqual('Driver retrieved successfully');
-    expect(response.body.data.id).toEqual(parseInt(createdDriver));
+    expect(response.body.data.driverId).toEqual(parseInt(createdDriver));
   });
 
   it("should return a 404 error when trying to retrieve a non-existent driver", async () => {
@@ -113,7 +110,6 @@ describe('Register Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
 
     expect(response.statusCode).toBe(200);
@@ -129,7 +125,6 @@ describe('Register Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
 
     const response = await request(app)
@@ -140,7 +135,6 @@ describe('Register Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
 
     expect(response.statusCode).toBe(400);
@@ -155,7 +149,6 @@ describe('Register Driver', () => {
         lastName: 'Doe',
         email: 'john@example.com',
         phone: '1234567890',
-        role: 'manager'
       });
 
     expect(response.statusCode).toBe(500);
@@ -170,7 +163,6 @@ describe('Register Driver', () => {
         email: 'john@example.com',
         password: '123',
         phone: '1234567890',
-        role: 'manager'
       });
 
     expect(response.statusCode).toBe(400);
@@ -189,7 +181,6 @@ describe('Login Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
   });
 
@@ -236,7 +227,7 @@ describe('Login Driver', () => {
 });
 
 describe('Delete Driver', () => {
-  let createdDriver: any; // This variable will store the ID of the driver we create for testing purposes
+  let createdDriver: any;
 
   beforeAll(async () => {
     await Driver.sync({ force: true });
@@ -248,16 +239,15 @@ describe('Delete Driver', () => {
         email: 'john@example.com',
         password: 'password',
         phone: '1234567890',
-        role: 'manager'
       });
-    createdDriver = response.body.data.id; // Save the ID of the newly created driver
+    createdDriver = response.body.data.driverId; // Save the ID of the newly created driver
   });
 
   afterEach(async () => {
     await Driver.sync({ force: true });
   });
 
-  it('should delete an driver successfully', async () => {
+  it('should delete a driver successfully', async () => {
     const response = await request(app)
       .delete(`/api/drivers/${createdDriver}`);
 

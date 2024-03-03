@@ -3,8 +3,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import db from '../models'
 import SuccessResponse from '../utils/success'
-import ErrorResponse, { errorHandlerMiddleware } from '../utils/error'
-import { tryCatch } from '../utils/tryCatch'
+import ErrorResponse from '../utils/error'
 
 const Driver = db.Driver
 
@@ -14,7 +13,7 @@ export const getAllDrivers = async (
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const drivers = await Driver.findAll({
-    attributes: ['firstName', 'lastName', 'email', 'phone', 'role'], // Exclude sensitive data
+    attributes: ['firstName', 'lastName', 'email', 'phone'], // Exclude sensitive data
   });
 
   const response = SuccessResponse(res, 200, 'Drivers retrieved successfully', drivers);
@@ -67,7 +66,6 @@ export const registerDriver = async (
     email: req.body.email,
     password: hashedPassword,
     phone: req.body.phone,
-    role: req.body.role,
     VehicleId: req.body.VehicleId
   });
 
@@ -124,7 +122,7 @@ export const deleteDriver = async (
 ): Promise<Response | ErrorResponse> => {
   const driver = await Driver.destroy({
     where: {
-      id: req.params.id
+      driverId: req.params.id
     }
   })
   if (driver === 1) {
