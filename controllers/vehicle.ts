@@ -50,7 +50,6 @@ export const createVehicle = async (
     model: req.body.model,
     location: req.body.location,
     status: req.body.status,
-    EmployeeId: req.body.EmployeeId
   })
 
   const response = SuccessResponse(

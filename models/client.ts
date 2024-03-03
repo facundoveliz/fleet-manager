@@ -22,16 +22,7 @@ export default (sequelize: any, DataTypes: any) => {
     email!: string;
     phone!: string;
     company!: string;
-    static associate(models: any) {
-      // 1-to-many relationship between Client and Delivery
-      // A client can have multiple deliveries associated with them.
-      Client.hasMany(models.Delivery, {
-        foreignKey: {
-          name: 'clientId',
-          allowNull: false
-        }
-      })
-    }
+    static associate(models: any) { }
   }
   Client.init({
     firstName: {

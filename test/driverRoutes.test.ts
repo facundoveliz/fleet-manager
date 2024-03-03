@@ -2,22 +2,22 @@ import express from 'express'
 import request from 'supertest';
 import dotenv from 'dotenv'
 import db from '../models'
-import employeeRoutes from '../routes/employee'
+import driverRoutes from '../routes/driver'
 
 const app = express()
 app.use(express.json())
-app.use('/api/employees/', employeeRoutes)
+app.use('/api/drivers/', driverRoutes)
 
 dotenv.config()
 
-const Employee = db.Employee
+const Driver = db.driver
 
-describe('Get All Employees', () => {
+describe('Get All Drivers', () => {
   beforeAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
     for (let index = 0; index < 5; index++) {
       await request(app)
-        .post('/api/employees/register')
+        .post('/api/drivers/register')
         .send({
           firstName: `John${index}`,
           lastName: `Doe${index}`,
@@ -30,15 +30,15 @@ describe('Get All Employees', () => {
   });
 
   afterEach(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
-  it('should retrieve all employees correctly', async () => {
+  it('should retrieve all drivers correctly', async () => {
     const response = await request(app)
-      .get('/api/employees');
+      .get('/api/drivers');
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toEqual('Employees retrieved successfully');
+    expect(response.body.message).toEqual('Drivers retrieved successfully');
     expect(Array.isArray(response.body.data)).toBeTruthy();
     response.body.data.forEach((item: any) => {
       expect(item).toEqual(
@@ -54,13 +54,13 @@ describe('Get All Employees', () => {
   });
 });
 
-describe('Get Employee', () => {
-  let createdEmployee: any;
+describe('Get Driver', () => {
+  let createdDriver: any;
 
   beforeAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -69,44 +69,44 @@ describe('Get Employee', () => {
         phone: '1234567890',
         role: 'manager'
       });
-    createdEmployee = response.body.data.id;
+    createdDriver = response.body.data.id;
   });
 
   afterEach(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
-  it('should retrieve the correct employee', async () => {
+  it('should retrieve the correct driver', async () => {
     const response = await request(app)
-      .get(`/api/employees/${createdEmployee}`);
+      .get(`/api/drivers/${createdDriver}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toEqual('Employee retrieved successfully');
-    expect(response.body.data.id).toEqual(parseInt(createdEmployee));
+    expect(response.body.message).toEqual('Driver retrieved successfully');
+    expect(response.body.data.id).toEqual(parseInt(createdDriver));
   });
 
-  it("should return a 404 error when trying to retrieve a non-existent employee", async () => {
+  it("should return a 404 error when trying to retrieve a non-existent driver", async () => {
     const invalidId = 99999;
     const response = await request(app)
-      .get(`/api/employees/${invalidId}`);
+      .get(`/api/drivers/${invalidId}`);
 
     expect(response.statusCode).toBe(404);
-    expect(response.body.message).toEqual('Employee not found');
+    expect(response.body.message).toEqual('Driver not found');
   });
 });
 
-describe('Register Employee', () => {
+describe('Register Driver', () => {
   beforeAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
   afterEach(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
-  it('should create a new employee', async () => {
+  it('should create a new driver', async () => {
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -117,12 +117,12 @@ describe('Register Employee', () => {
       });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toEqual('Employee created successfully');
+    expect(response.body.message).toEqual('Driver created successfully');
   });
 
   it('should fail if email already exists', async () => {
     await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -133,7 +133,7 @@ describe('Register Employee', () => {
       });
 
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -149,7 +149,7 @@ describe('Register Employee', () => {
 
   it('should fail if password is not provided', async () => {
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -163,7 +163,7 @@ describe('Register Employee', () => {
 
   it('should fail if password is not valid', async () => {
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -178,11 +178,11 @@ describe('Register Employee', () => {
   });
 });
 
-describe('Login Employee', () => {
+describe('Login Driver', () => {
   beforeAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
     await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -194,25 +194,25 @@ describe('Login Employee', () => {
   });
 
   afterAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
-  it('should log in a valid employee', async () => {
+  it('should log in a valid driver', async () => {
 
     const response = await request(app)
-      .post('/api/employees/login')
+      .post('/api/drivers/login')
       .send({
         email: 'john@example.com',
         password: 'password'
       });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toBe('Employee logged successfully');
+    expect(response.body.message).toBe('Driver logged successfully');
   });
 
   it('should fail if email is not valid', async () => {
     const response = await request(app)
-      .post('/api/employees/login')
+      .post('/api/drivers/login')
       .send({
         email: 'invalid@example.com',
         password: 'password'
@@ -224,7 +224,7 @@ describe('Login Employee', () => {
 
   it('should fail if password is not valid', async () => {
     const response = await request(app)
-      .post('/api/employees/login')
+      .post('/api/drivers/login')
       .send({
         email: 'john@example.com',
         password: 'invalid'
@@ -235,13 +235,13 @@ describe('Login Employee', () => {
   });
 });
 
-describe('Delete Employee', () => {
-  let createdEmployee: any; // This variable will store the ID of the employee we create for testing purposes
+describe('Delete Driver', () => {
+  let createdDriver: any; // This variable will store the ID of the driver we create for testing purposes
 
   beforeAll(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
     const response = await request(app)
-      .post('/api/employees/register')
+      .post('/api/drivers/register')
       .send({
         firstName: 'John',
         lastName: 'Doe',
@@ -250,28 +250,28 @@ describe('Delete Employee', () => {
         phone: '1234567890',
         role: 'manager'
       });
-    createdEmployee = response.body.data.id; // Save the ID of the newly created employee
+    createdDriver = response.body.data.id; // Save the ID of the newly created driver
   });
 
   afterEach(async () => {
-    await Employee.sync({ force: true });
+    await Driver.sync({ force: true });
   });
 
-  it('should delete an employee successfully', async () => {
+  it('should delete an driver successfully', async () => {
     const response = await request(app)
-      .delete(`/api/employees/${createdEmployee}`);
+      .delete(`/api/drivers/${createdDriver}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toEqual('Employee deleted');
-    expect(response.body.data).toEqual(createdEmployee);
+    expect(response.body.message).toEqual('Driver deleted');
+    expect(response.body.data).toEqual(createdDriver);
   });
 
-  it("should return a 404 error when trying to delete a non-existent employee", async () => {
+  it("should return a 404 error when trying to delete a non-existent driver", async () => {
     const invalidId = 99999;
     const response = await request(app)
-      .delete(`/api/employees/${invalidId}`);
+      .delete(`/api/drivers/${invalidId}`);
 
     expect(response.statusCode).toBe(404);
-    expect(response.body.message).toEqual('Employee not found');
+    expect(response.body.message).toEqual('Driver not found');
   });
 });

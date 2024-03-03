@@ -49,7 +49,6 @@ export const createDelivery = async (
     description: req.body.description,
     wayPoints: req.body.wayPoints,
     status: req.body.status,
-    employeeId: req.body.employeeId,
     licencePlate: req.body.licencePlate,
     clientId: req.body.clientId
   })

@@ -20,20 +20,7 @@ export default (sequelize: any, DataTypes: any) => {
     model!: string;
     location!: string
     status!: 'operational' | 'inactive';
-    static associate(models: any) {
-      // Inverse association of Vehicle to Employee
-      // A vehicle belongs to an employee identified by its license plate.
-      Vehicle.belongsTo(models.Employee, { foreignKey: 'licencePlate' })
-
-      // 1-to-many relationship between Vehicle and Delivery
-      // A vehicle can have multiple deliveries associated with it.
-      Vehicle.hasMany(models.Delivery, {
-        foreignKey: {
-          name: 'licencePlate',
-          allowNull: false
-        }
-      })
-    }
+    static associate(models: any) { }
   }
   Vehicle.init({
     licencePlate: {

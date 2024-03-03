@@ -6,48 +6,48 @@ import SuccessResponse from '../utils/success'
 import ErrorResponse, { errorHandlerMiddleware } from '../utils/error'
 import { tryCatch } from '../utils/tryCatch'
 
-const Employee = db.Employee
+const Driver = db.Driver
 
-export const getAllEmployees = async (
+export const getAllDrivers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const employees = await Employee.findAll({
+  const drivers = await Driver.findAll({
     attributes: ['firstName', 'lastName', 'email', 'phone', 'role'], // Exclude sensitive data
   });
 
-  const response = SuccessResponse(res, 200, 'Employees retrieved successfully', employees);
+  const response = SuccessResponse(res, 200, 'Drivers retrieved successfully', drivers);
   return response;
 }
 
-export const getEmployee = async (
+export const getDriver = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const employee = await Employee.findByPk(req.params.id)
-  if (employee === null) {
-    throw new ErrorResponse(404, false, 'Employee not found');
+  const driver = await Driver.findByPk(req.params.id)
+  if (driver === null) {
+    throw new ErrorResponse(404, false, 'Driver not found');
   } else {
     const response = SuccessResponse(
       res,
       200,
-      'Employee retrieved successfully',
-      employee
+      'Driver retrieved successfully',
+      driver
     )
     return response
   }
 }
 
-export const registerEmployee = async (
+export const registerDriver = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
   // Check if the email already exists
-  let existingEmployee = await Employee.findOne({ where: { email: req.body.email } });
-  if (existingEmployee) {
+  let existingDriver = await Driver.findOne({ where: { email: req.body.email } });
+  if (existingDriver) {
     throw new ErrorResponse(400, false, 'Email already exists');
   }
 
@@ -60,8 +60,8 @@ export const registerEmployee = async (
     throw new ErrorResponse(400, false, 'Validation error: Password must be between 8 and 64 characters');
   }
 
-  // Create the new employee
-  const newEmployee = await Employee.create({
+  // Create the new driver
+  const newDriver = await Driver.create({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
@@ -71,10 +71,10 @@ export const registerEmployee = async (
     VehicleId: req.body.VehicleId
   });
 
-  return SuccessResponse(res, 200, 'Employee created successfully', newEmployee);
+  return SuccessResponse(res, 200, 'Driver created successfully', newDriver);
 };
 
-export const loginEmployee = async (
+export const loginDriver = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -82,26 +82,26 @@ export const loginEmployee = async (
   const { email, password } = req.body
 
   // checks if the email is valid
-  const employee: any = await Employee.findOne({
+  const driver: any = await Driver.findOne({
     where: {
       email
     }
   })
 
   // if the email doesn't exists, the func ends here
-  if (!employee) {
+  if (!driver) {
     throw new ErrorResponse(400, false, 'Invalid email or password');
   }
 
   // compares passwords
-  const validPassword = await bcrypt.compare(password, employee.password)
+  const validPassword = await bcrypt.compare(password, driver.password)
   if (!validPassword) {
     throw new ErrorResponse(400, false, 'Invalid email or password');
   }
 
   // generate token and set it to expire in 30 days
   const token = jwt.sign(
-    { _id: employee.id },
+    { _id: driver.id },
     process.env.JWT_PRIVATE_KEY as string,
     {
       expiresIn: '30d'
@@ -111,25 +111,25 @@ export const loginEmployee = async (
   const response = SuccessResponse(
     res,
     200,
-    'Employee logged successfully',
+    'Driver logged successfully',
     token
   )
   return response
 }
 
-export const deleteEmployee = async (
+export const deleteDriver = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const employee = await Employee.destroy({
+  const driver = await Driver.destroy({
     where: {
       id: req.params.id
     }
   })
-  if (employee === 1) {
-    const response = SuccessResponse(res, 200, 'Employee deleted', employee)
+  if (driver === 1) {
+    const response = SuccessResponse(res, 200, 'Driver deleted', driver)
     return response
   }
-  throw new ErrorResponse(404, false, 'Employee not found');
+  throw new ErrorResponse(404, false, 'Driver not found');
 }
