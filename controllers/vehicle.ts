@@ -20,7 +20,7 @@ export const getAllVehicles = async (
   return response;
 }
 
-export const getVehicleById = async (
+export const getVehicle = async (
   req: Request,
   res: Response,
   next: NextFunction

@@ -53,7 +53,6 @@ export const registerClient = async (
 
   // Create the new client
   client = await Client.create({
-    clientId: undefined, // Allow Sequelize to generate ID
     company: req.body.company,
     firstName: req.body.firstName,
     lastName: req.body.lastName,

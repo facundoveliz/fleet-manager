@@ -2,6 +2,7 @@
 import { Model } from 'sequelize';
 
 interface OrderAttributes {
+  orderId: string,
   origin: string,
   destination: string,
   distance: number,
@@ -18,6 +19,7 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    orderId!: string;
     origin!: string;
     destination!: string;
     distance!: number;
@@ -35,18 +37,25 @@ export default (sequelize: any, DataTypes: any) => {
         as: 'vehicle',
       });
 
-      Order.belongsTo(models.Employee, {
+      Order.belongsTo(models.Driver, {
         foreignKey: 'employeeId',
         as: 'employee',
       });
 
-      Order.belongsTo(models.Shipment, {
-        foreignKey: 'shipmentId',
-        as: 'shipment',
-      });
+      // TODO: uncomment this
+      // Order.belongsTo(models.Shipment, {
+      //   foreignKey: 'shipmentId',
+      //   as: 'shipment',
+      // });
     }
   }
   Order.init({
+    orderId: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      unique: true,
+    },
     origin: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -4,7 +4,8 @@ import { Model } from 'sequelize';
 interface ClientAttributes {
   clientId: number;
   company: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
 }
@@ -18,11 +19,11 @@ export default (sequelize: any, DataTypes: any) => {
      */
     clientId!: number;
     company!: string;
-    name!: string;
+    firstName!: string;
+    lastName!: string;
     phone!: string;
     email!: string;
     static associate(models: any) {
-      // One Client has many Orders
       Client.hasMany(models.Order);
     }
   }
@@ -66,7 +67,7 @@ export default (sequelize: any, DataTypes: any) => {
       validate: {
         notEmpty: { msg: "Phone cannot be empty" },
         is: {
-          args: /^(\+?\d{1,4}[-\s]?)?$$?\d{3}$$?[-\s]?\d{3}[-\s]?\d{4}$/i,
+          args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
           msg: "Invalid phone number format"
         }
       }
