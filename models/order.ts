@@ -1,15 +1,15 @@
 'use strict';
 import { Model } from 'sequelize';
 
-interface DeliveryAttributes {
+interface OrderAttributes {
   description: string,
   wayPoints: string,
   status: 'waiting' | 'ongoing' | 'completed';
 }
 
 export default (sequelize: any, DataTypes: any) => {
-  class Delivery extends Model<DeliveryAttributes>
-    implements DeliveryAttributes {
+  class Order extends Model<OrderAttributes>
+    implements OrderAttributes {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -20,7 +20,7 @@ export default (sequelize: any, DataTypes: any) => {
     status!: 'waiting' | 'ongoing' | 'completed';
     static associate(models: any) { }
   }
-  Delivery.init({
+  Order.init({
     description: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -49,7 +49,7 @@ export default (sequelize: any, DataTypes: any) => {
     }
   }, {
     sequelize,
-    modelName: 'Delivery',
+    modelName: 'Order',
   });
-  return Delivery;
+  return Order;
 };

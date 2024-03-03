@@ -3,49 +3,49 @@ import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
 import db from '../models'
 
-const Delivery = db.Delivery
+const Order = db.order
 
-export const getAllDeliveries = async (
+export const getAllOrders = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const deliveries = await Delivery.findAll()
+  const orders = await Order.findAll()
   const response = SuccessResponse(
     res,
     200,
-    'Deliveries retrieved successfully',
-    deliveries
+    'Orders retrieved successfully',
+    orders
   )
   return response
 }
 
-export const getDelivery = async (
+export const getOrder = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const delivery = await Delivery.findByPk(req.params.id)
-  if (delivery === null) {
-    throw new ErrorResponse(404, false, 'Delivery not found');
+  const order = await Order.findByPk(req.params.id)
+  if (order === null) {
+    throw new ErrorResponse(404, false, 'Order not found');
   } else {
     const response = SuccessResponse(
       res,
       200,
-      'Delivery retrieved successfully',
-      delivery
+      'Order retrieved successfully',
+      order
     )
     return response
   }
 }
 
-export const createDelivery = async (
+export const createOrder = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  // creates the new delivery
-  const delivery = await Delivery.create({
+  // creates the new order
+  const order = await Order.create({
     description: req.body.description,
     wayPoints: req.body.wayPoints,
     status: req.body.status,
@@ -56,25 +56,25 @@ export const createDelivery = async (
   const response = SuccessResponse(
     res,
     200,
-    'Delivery created successfully',
-    delivery
+    'Order created successfully',
+    order
   )
   return response
 }
 
-export const deleteDelivery = async (
+export const deleteOrder = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const delivery = await Delivery.destroy({
+  const order = await Order.destroy({
     where: {
       licencePlate: req.params.id
     }
   })
-  if (delivery === 1) {
-    const response = SuccessResponse(res, 200, 'Delivery deleted', delivery)
+  if (order === 1) {
+    const response = SuccessResponse(res, 200, 'Order deleted', order)
     return response
   }
-  throw new ErrorResponse(404, false, 'Delivery not found');
+  throw new ErrorResponse(404, false, 'Order not found');
 }
