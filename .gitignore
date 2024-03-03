@@ -2,4 +2,4 @@
 /dist
 .env
 fleet-manager.sqlite3
-fleet-manager-fleet.sqlite3
+fleet-manager-test.sqlite3
