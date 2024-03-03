@@ -25,25 +25,21 @@ export default (sequelize: any, DataTypes: any) => {
     date!: Date;
     status!: 'waiting' | 'ongoing' | 'completed';
     static associate(models: any) {
-      // Order has one Client (through `clientId` column)
       Order.belongsTo(models.Client, {
         foreignKey: 'clientId',
         as: 'client',
       });
 
-      // Order has one Vehicle (through `vehicleId` column)
       Order.belongsTo(models.Vehicle, {
         foreignKey: 'vehicleId',
         as: 'vehicle',
       });
 
-      // Order has one Employee (through `employeeId` column)
       Order.belongsTo(models.Employee, {
         foreignKey: 'employeeId',
         as: 'employee',
       });
 
-      // Order has one Shipment (through `shipmentId` column)
       Order.belongsTo(models.Shipment, {
         foreignKey: 'shipmentId',
         as: 'shipment',
