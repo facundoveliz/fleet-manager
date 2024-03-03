@@ -2,31 +2,49 @@
 import { Model } from 'sequelize';
 
 interface ClientAttributes {
-  firstName: string,
-  lastName: string,
-  email: string,
-  phone: string,
-  company: string,
+  clientId: number;
+  company: string;
+  name: string;
+  phone: string;
+  email: string;
 }
 
 export default (sequelize: any, DataTypes: any) => {
-  class Client extends Model<ClientAttributes>
-    implements ClientAttributes {
+  class Client extends Model<ClientAttributes> implements ClientAttributes {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    firstName!: string;
-    lastName!: string;
-    email!: string;
-    phone!: string;
+    clientId!: number;
     company!: string;
-    static associate(models: any) { }
+    name!: string;
+    phone!: string;
+    email!: string;
+    static associate(models: any) {
+      // One Client has many Orders
+      Client.hasMany(models.Order);
+    }
   }
   Client.init({
+    clientId: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    company: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        notEmpty: { msg: "Company name cannot be empty" },
+        len: { args: [3, 255], msg: "Company name must be between 3 and 255 characters" }
+      }
+    },
     firstName: {
       type: DataTypes.STRING,
+      field: 'name',
       allowNull: false,
       validate: {
         notEmpty: { msg: "First name cannot be empty" },
@@ -35,10 +53,22 @@ export default (sequelize: any, DataTypes: any) => {
     },
     lastName: {
       type: DataTypes.STRING,
+      field: 'name',
       allowNull: false,
       validate: {
         notEmpty: { msg: "Last name cannot be empty" },
         len: { args: [3, 25], msg: "Last name must be between 3 and 25 characters" }
+      }
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: { msg: "Phone cannot be empty" },
+        is: {
+          args: /^(\+?\d{1,4}[-\s]?)?$$?\d{3}$$?[-\s]?\d{3}[-\s]?\d{4}$/i,
+          msg: "Invalid phone number format"
+        }
       }
     },
     email: {
@@ -50,26 +80,6 @@ export default (sequelize: any, DataTypes: any) => {
         isEmail: { msg: "Invalid email format" }
       }
     },
-    phone: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: { msg: "Phone cannot be empty" },
-        is: {
-          args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
-          msg: "Invalid phone number format"
-        }
-      }
-    },
-    company: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        notEmpty: { msg: "Company name cannot be empty" },
-        len: { args: [3, 255], msg: "Company name must be between 3 and 255 characters" }
-      }
-    }
   }, {
     sequelize,
     modelName: 'Client',

@@ -10,14 +10,14 @@ export const getAllClients = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const clients = await Client.findAll()
+  const clients = await Client.findAll();
   const response = SuccessResponse(
     res,
     200,
     'Clients retrieved successfully',
     clients
-  )
-  return response
+  );
+  return response;
 }
 
 export const getClient = async (
@@ -25,8 +25,8 @@ export const getClient = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const client = await Client.findByPk(req.params.id)
-  if (client === null) {
+  const client = await Client.findByPk(req.params.id);
+  if (!client) {
     throw new ErrorResponse(404, false, 'Client not found');
   } else {
     const response = SuccessResponse(
@@ -34,8 +34,8 @@ export const getClient = async (
       200,
       'Client retrieved successfully',
       client
-    )
-    return response
+    );
+    return response;
   }
 }
 
@@ -44,29 +44,30 @@ export const registerClient = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  // checks if the email doesn't exists
-  let client = await Client.findOne({ where: { email: req.body.email } })
-  // if the email exists, the func ends here
-  if (client != null) {
+  // Check if the email does not exist
+  let client = await Client.findOne({ where: { email: req.body.email } });
+  // If the email exists, end the function here
+  if (client !== null) {
     throw new ErrorResponse(400, false, 'Email already exists');
   }
 
-  // creates the new client
+  // Create the new client
   client = await Client.create({
+    clientId: undefined, // Allow Sequelize to generate ID
+    company: req.body.company,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    email: req.body.email,
     phone: req.body.phone,
-    company: req.body.company
-  })
+    email: req.body.email,
+  });
 
   const response = SuccessResponse(
     res,
     200,
     'Client created successfully',
     client
-  )
-  return response
+  );
+  return response;
 }
 
 export const deleteClient = async (
@@ -74,15 +75,14 @@ export const deleteClient = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const client = await Client.destroy({
+  const clientDeletedCount = await Client.destroy({
     where: {
-      id: req.params.id
+      clientId: req.params.id
     }
-  })
-  if (client === 1) {
-    const response = SuccessResponse(res, 200, 'Client deleted', client)
-    return response
+  });
+  if (clientDeletedCount === 1) {
+    const response = SuccessResponse(res, 200, 'Client deleted', clientDeletedCount);
+    return response;
   }
-  const error = new ErrorResponse(404, false, 'Client not found')
   throw new ErrorResponse(404, false, 'Client not found');
 }
