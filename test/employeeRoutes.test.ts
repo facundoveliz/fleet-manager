@@ -13,13 +13,10 @@ dotenv.config()
 const Employee = db.Employee
 
 describe('Get All Employees', () => {
-  let createdEmployees;
-
   beforeAll(async () => {
     await Employee.sync({ force: true });
-    createdEmployees = [];
     for (let index = 0; index < 5; index++) {
-      const response = await request(app)
+      await request(app)
         .post('/api/employees/register')
         .send({
           firstName: `John${index}`,
@@ -29,7 +26,6 @@ describe('Get All Employees', () => {
           phone: `${1234567890 + index}`,
           role: 'manager'
         });
-      createdEmployees.push(response.body.data.id);
     }
   });
 
