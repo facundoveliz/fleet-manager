@@ -2,8 +2,11 @@
 import { Model } from 'sequelize';
 
 interface OrderAttributes {
-  description: string,
-  wayPoints: string,
+  origin: string,
+  destination: string,
+  distance: number,
+  duration: number,
+  date: Date,
   status: 'waiting' | 'ongoing' | 'completed';
 }
 
@@ -15,36 +18,79 @@ export default (sequelize: any, DataTypes: any) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    description!: string;
-    wayPoints!: string;
+    origin!: string;
+    destination!: string;
+    distance!: number;
+    duration!: number;
+    date!: Date;
     status!: 'waiting' | 'ongoing' | 'completed';
-    static associate(models: any) { }
+    static associate(models: any) {
+      // Order has one Client (through `clientId` column)
+      Order.belongsTo(models.Client, {
+        foreignKey: 'clientId',
+        as: 'client',
+      });
+
+      // Order has one Vehicle (through `vehicleId` column)
+      Order.belongsTo(models.Vehicle, {
+        foreignKey: 'vehicleId',
+        as: 'vehicle',
+      });
+
+      // Order has one Employee (through `employeeId` column)
+      Order.belongsTo(models.Employee, {
+        foreignKey: 'employeeId',
+        as: 'employee',
+      });
+
+      // Order has one Shipment (through `shipmentId` column)
+      Order.belongsTo(models.Shipment, {
+        foreignKey: 'shipmentId',
+        as: 'shipment',
+      });
+    }
   }
   Order.init({
-    description: {
+    origin: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: "Description cannot be empty" },
-        len: { args: [5, 255], msg: "Description must be between 5 and 255 characters" }
+        notEmpty: { msg: "Origin cannot be empty" },
       }
     },
-    wayPoints: {
+    destination: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: { msg: "Waypoints cannot be empty" },
+        notEmpty: { msg: "Destination cannot be empty" },
+      }
+    },
+    distance: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        min: { args: [0], msg: "Distance must be greater than or equal to zero" },
+      }
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: { args: [0], msg: "Duration must be greater than or equal to zero" },
+      }
+    },
+    date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: {
+        isDate: { args: false, msg: "Date must be a valid date" },
       }
     },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('waiting', 'ongoing', 'completed'),
       allowNull: false,
       validate: {
         notEmpty: { msg: "Status cannot be empty" },
-        isIn: {
-          args: [['waiting', 'ongoing', 'completed']],
-          msg: "Status must be either 'waiting', 'ongoing', or 'completed'"
-        }
       }
     }
   }, {

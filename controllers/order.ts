@@ -3,21 +3,21 @@ import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
 import db from '../models'
 
-const Order = db.order
+const Order = db.Order // Corrected the import alias
 
 export const getAllOrders = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const orders = await Order.findAll()
+  const orders = await Order.findAll();
   const response = SuccessResponse(
     res,
     200,
     'Orders retrieved successfully',
     orders
-  )
-  return response
+  );
+  return response;
 }
 
 export const getOrder = async (
@@ -25,8 +25,8 @@ export const getOrder = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const order = await Order.findByPk(req.params.id)
-  if (order === null) {
+  const order = await Order.findByPk(req.params.id);
+  if (!order) {
     throw new ErrorResponse(404, false, 'Order not found');
   } else {
     const response = SuccessResponse(
@@ -34,8 +34,8 @@ export const getOrder = async (
       200,
       'Order retrieved successfully',
       order
-    )
-    return response
+    );
+    return response;
   }
 }
 
@@ -44,22 +44,26 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  // creates the new order
   const order = await Order.create({
-    description: req.body.description,
-    wayPoints: req.body.wayPoints,
+    origin: req.body.origin,
+    destination: req.body.destination,
+    distance: req.body.distance,
+    duration: req.body.duration,
+    date: req.body.date,
     status: req.body.status,
-    licencePlate: req.body.licencePlate,
+    vehicleId: req.body.vehicleId,
+    employeeId: req.body.employeeId,
+    shipmentId: req.body.shipmentId,
     clientId: req.body.clientId
-  })
+  });
 
   const response = SuccessResponse(
     res,
     200,
     'Order created successfully',
     order
-  )
-  return response
+  );
+  return response;
 }
 
 export const deleteOrder = async (
@@ -67,14 +71,14 @@ export const deleteOrder = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  const order = await Order.destroy({
+  const rowsDeleted = await Order.destroy({
     where: {
-      licencePlate: req.params.id
+      id: req.params.id
     }
-  })
-  if (order === 1) {
-    const response = SuccessResponse(res, 200, 'Order deleted', order)
-    return response
+  });
+  if (rowsDeleted === 1) {
+    const response = SuccessResponse(res, 200, 'Order deleted', rowsDeleted);
+    return response;
   }
   throw new ErrorResponse(404, false, 'Order not found');
 }
