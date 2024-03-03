@@ -8,7 +8,7 @@ interface OrderAttributes {
   distance: number,
   duration: number,
   date: Date,
-  status: 'waiting' | 'ongoing' | 'completed';
+  status: 'pending' | 'transit' | 'delivered';
 }
 
 export default (sequelize: any, DataTypes: any) => {
@@ -25,7 +25,7 @@ export default (sequelize: any, DataTypes: any) => {
     distance!: number;
     duration!: number;
     date!: Date;
-    status!: 'waiting' | 'ongoing' | 'completed';
+    status!: 'pending' | 'transit' | 'delivered';
     static associate(models: any) {
       Order.belongsTo(models.Client, {
         foreignKey: 'clientId',
@@ -42,11 +42,10 @@ export default (sequelize: any, DataTypes: any) => {
         as: 'employee',
       });
 
-      // TODO: uncomment this
-      // Order.belongsTo(models.Shipment, {
-      //   foreignKey: 'shipmentId',
-      //   as: 'shipment',
-      // });
+      Order.belongsTo(models.Shipment, {
+        foreignKey: 'shipmentId',
+        as: 'shipment',
+      });
     }
   }
   Order.init({
@@ -92,7 +91,7 @@ export default (sequelize: any, DataTypes: any) => {
       }
     },
     status: {
-      type: DataTypes.ENUM('waiting', 'ongoing', 'completed'),
+      type: DataTypes.ENUM('pending', 'transit', 'delivered'),
       allowNull: false,
       validate: {
         notEmpty: { msg: "Status cannot be empty" },

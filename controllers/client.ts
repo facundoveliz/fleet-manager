@@ -39,7 +39,7 @@ export const getClient = async (
   }
 }
 
-export const registerClient = async (
+export const createClient = async (
   req: Request,
   res: Response,
   next: NextFunction
