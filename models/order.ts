@@ -38,8 +38,8 @@ export default (sequelize: any, DataTypes: any) => {
       });
 
       Order.belongsTo(models.Driver, {
-        foreignKey: 'employeeId',
-        as: 'employee',
+        foreignKey: 'driverId',
+        as: 'driver',
       });
 
       Order.belongsTo(models.Shipment, {

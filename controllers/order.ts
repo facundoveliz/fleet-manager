@@ -3,7 +3,8 @@ import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
 import db from '../models'
 
-const Order = db.Order // Corrected the import alias
+const Order = db.Order
+const Client = db.Client
 
 export const getAllOrders = async (
   req: Request,
@@ -44,6 +45,19 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
+  const [existingVehicle, existingDriver, existingShipment, existingClient] = await Promise.all([
+    Client.findOne({ where: { clientId: req.body.vehicleId } }),
+    Client.findOne({ where: { clientId: req.body.driverId } }),
+    Client.findOne({ where: { clientId: req.body.shipmentId } }),
+    Client.findOne({ where: { clientId: req.body.clientId } })
+  ]);
+
+  if (!existingVehicle) throw new ErrorResponse(404, false, 'Vehicle not found');
+  if (!existingDriver) throw new ErrorResponse(404, false, 'Driver not found');
+  if (!existingShipment) throw new ErrorResponse(404, false, 'Shipment not found');
+  if (!existingClient) throw new ErrorResponse(404, false, 'Driver Client found');
+
+
   const order = await Order.create({
     origin: req.body.origin,
     destination: req.body.destination,
@@ -52,7 +66,7 @@ export const createOrder = async (
     date: req.body.date,
     status: req.body.status,
     vehicleId: req.body.vehicleId,
-    employeeId: req.body.employeeId,
+    driverId: req.body.driverId,
     shipmentId: req.body.shipmentId,
     clientId: req.body.clientId
   });
