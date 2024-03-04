@@ -240,7 +240,7 @@ describe('Delete Driver', () => {
         password: 'password',
         phone: '1234567890',
       });
-    createdDriver = response.body.data.driverId; // Save the ID of the newly created driver
+    createdDriver = response.body.data.driverId;
   });
 
   afterEach(async () => {
