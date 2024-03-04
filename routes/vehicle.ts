@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.get('/', tryCatch(getAllVehicles))
 router.get('/:id', tryCatch(getVehicle))
-router.post('/new', tryCatch(createVehicle))
+router.post('/create', tryCatch(createVehicle))
 router.delete('/:id', tryCatch(deleteVehicle))
 
 export default router

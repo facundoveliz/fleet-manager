@@ -41,8 +41,10 @@ export default (sequelize: any, DataTypes: any) => {
       unique: true,
       validate: {
         notEmpty: { msg: "Licence plate cannot be empty" },
-        is: /^[A-Z]{3}-\d{3}$/i,
-        msg: "License plate must be in format XXX-YYY (3 letters followed by 3 digits)",
+        is: {
+          args: /^[A-Z]{3}-\d{3}$/i,
+          msg: "License plate must be in format XXX-YYY (3 letters followed by 3 digits)",
+        }
       },
     },
     model: {

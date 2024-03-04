@@ -48,6 +48,11 @@ export const createVehicle = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
+  let existingLicencePlate = await Vehicle.findOne({ where: { licencePlate: req.body.licencePlate } });
+  if (existingLicencePlate) {
+    throw new ErrorResponse(400, false, 'Licence plate already exists');
+  }
+
   const vehicle = await Vehicle.create({
     licencePlate: req.body.licencePlate,
     model: req.body.model,
