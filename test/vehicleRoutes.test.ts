@@ -33,7 +33,7 @@ describe('Get All Vehicles', () => {
   });
 
   it('should retrieve all vehicles correctly', async () => {
-    const response = await request(app as any)
+    const response = await request(app)
       .get('/api/vehicles');
 
     expect(response.statusCode).toBe(200);
