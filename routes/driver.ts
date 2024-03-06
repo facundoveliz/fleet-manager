@@ -4,7 +4,7 @@ import {
   getDriver,
   registerDriver,
   loginDriver,
-  deleteDriver
+  deleteDriver,
 } from '../controllers/driver'
 import { tryCatch } from '../utils/tryCatch'
 

@@ -3,7 +3,7 @@ import {
   getAllShipments,
   getShipment,
   createShipment,
-  deleteShipment
+  deleteShipment,
 } from '../controllers/shipment'
 import { tryCatch } from '../utils/tryCatch'
 

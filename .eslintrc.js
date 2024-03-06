@@ -4,21 +4,19 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: [
-    'standard-with-typescript',
-  ],
+  extends: ['standard-with-typescript'],
   overrides: [
     {
-      files: [".eslintrc.{js,cjs}"],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
-        sourceType: "script",
+        sourceType: 'script',
       },
       env: {
-        jest: true
-      }
+        jest: true,
+      },
     },
   ],
   parserOptions: {
-    ecmaVersion: "latest",
+    ecmaVersion: 'latest',
   },
-};
+}

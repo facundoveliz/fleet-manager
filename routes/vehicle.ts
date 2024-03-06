@@ -3,7 +3,7 @@ import {
   getAllVehicles,
   getVehicle,
   createVehicle,
-  deleteVehicle
+  deleteVehicle,
 } from '../controllers/vehicle'
 import { tryCatch } from '../utils/tryCatch'
 
