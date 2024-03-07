@@ -23,7 +23,7 @@ export default (sequelize: any, DataTypes: any) => {
     location!: string
     status!: 'operational' | 'inactive'
     capacity!: number
-    static associate(models: any) {
+    static associate (models: any) {
       Vehicle.hasMany(models.Order)
     }
   }
@@ -33,7 +33,7 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        unique: true,
+        unique: true
       },
       licencePlate: {
         type: DataTypes.STRING,
@@ -43,9 +43,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Licence plate cannot be empty' },
           is: {
             args: /^[A-Z]{3}-\d{3}$/i,
-            msg: 'License plate must be in format XXX-YYY (3 letters followed by 3 digits)',
-          },
-        },
+            msg: 'License plate must be in format XXX-YYY (3 letters followed by 3 digits)'
+          }
+        }
       },
       model: {
         type: DataTypes.STRING,
@@ -54,37 +54,37 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Model name cannot be empty' },
           len: {
             args: [2, 50],
-            msg: 'Model name must be between 2 and 50 characters',
-          },
-        },
+            msg: 'Model name must be between 2 and 50 characters'
+          }
+        }
       },
       location: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: 'Location cannot be empty' },
-        },
+          notEmpty: { msg: 'Location cannot be empty' }
+        }
       },
       status: {
         type: DataTypes.ENUM('operational', 'inactive'),
         allowNull: false,
         validate: {
-          notEmpty: { msg: 'Status cannot be empty' },
-        },
+          notEmpty: { msg: 'Status cannot be empty' }
+        }
       },
       capacity: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notEmpty: { msg: 'Capacity cannot be empty' },
-          min: { args: [1], msg: 'Capacity must be at least 1' },
-        },
-      },
+          min: { args: [1], msg: 'Capacity must be at least 1' }
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'Vehicle',
-    },
+      modelName: 'Vehicle'
+    }
   )
   return Vehicle
 }

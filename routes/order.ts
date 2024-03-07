@@ -3,7 +3,7 @@ import {
   createOrder,
   deleteOrder,
   getAllOrders,
-  getOrder,
+  getOrder
 } from '../controllers/order'
 import { tryCatch } from '../utils/tryCatch'
 

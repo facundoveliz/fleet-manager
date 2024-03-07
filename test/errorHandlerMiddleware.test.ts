@@ -1,4 +1,4 @@
-import { Response, Request } from 'express'
+import { type Response, type Request } from 'express'
 import ErrorResponse, { errorHandlerMiddleware } from '../utils/error'
 
 describe('errorHandlerMiddleware', () => {
@@ -7,7 +7,7 @@ describe('errorHandlerMiddleware', () => {
     const req = {} as Request
     const res = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      json: jest.fn()
     } as unknown as Response
     const next = jest.fn()
 
@@ -16,7 +16,7 @@ describe('errorHandlerMiddleware', () => {
     expect(res.status).toHaveBeenCalledWith(404)
     expect(res.json).toHaveBeenCalledWith({
       success: false,
-      message: 'Not Found',
+      message: 'Not Found'
     })
     expect(next).not.toHaveBeenCalled()
   })
@@ -26,7 +26,7 @@ describe('errorHandlerMiddleware', () => {
     const req = {} as Request
     const res = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      json: jest.fn()
     } as unknown as Response
     const next = jest.fn()
 
@@ -35,7 +35,7 @@ describe('errorHandlerMiddleware', () => {
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.json).toHaveBeenCalledWith({
       success: false,
-      message: 'Internal Server Error',
+      message: 'Internal Server Error'
     })
     expect(next).not.toHaveBeenCalled()
   })

@@ -23,7 +23,7 @@ describe('Get All Clients', () => {
           firstName: `John${index}`,
           lastName: `Doe${index}`,
           phone: `${1234567890 + index}`,
-          email: `johndoe${index}@example.com`,
+          email: `johndoe${index}@example.com`
         })
     }
   })
@@ -45,8 +45,8 @@ describe('Get All Clients', () => {
           firstName: expect.any(String),
           lastName: expect.any(String),
           phone: expect.any(String),
-          email: expect.any(String),
-        }),
+          email: expect.any(String)
+        })
       )
     })
   })
@@ -62,7 +62,7 @@ describe('Get Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
     createdClient = response.body.data.clientId
   })
@@ -103,7 +103,7 @@ describe('Register Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
 
     expect(response.statusCode).toBe(200)
@@ -116,7 +116,7 @@ describe('Register Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
 
     const response = await request(app).post('/api/clients/register').send({
@@ -124,7 +124,7 @@ describe('Register Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
 
     expect(response.statusCode).toBe(400)
@@ -137,12 +137,12 @@ describe('Register Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
 
     expect(response.statusCode).toBe(500)
     expect(response.body.message).toBe(
-      'notNull Violation: Client.company cannot be null',
+      'notNull Violation: Client.company cannot be null'
     )
   })
 })
@@ -157,7 +157,7 @@ describe('Delete Client', () => {
       firstName: 'John',
       lastName: 'Doe',
       phone: '1234567890',
-      email: 'johndoe@example.com',
+      email: 'johndoe@example.com'
     })
     createdClient = response.body.data.clientId
   })

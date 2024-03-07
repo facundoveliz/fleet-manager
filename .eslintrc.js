@@ -2,22 +2,26 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
+    node: true
   },
-  extends: ['standard-with-typescript'],
+  extends: [
+    'standard-with-typescript',
+    'plugin:@typescript-eslint/recommended'
+  ],
   overrides: [
     {
-      files: ['.eslintrc.{js,cjs}'],
+      files: ['.eslintrc.js'],
       parserOptions: {
-        sourceType: 'script',
+        sourceType: 'script'
       },
       env: {
-        jest: true,
-      },
-    },
+        jest: true
+      }
+    }
   ],
-  ignorePatterns: ["client"],
+  ignorePatterns: ['client'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 'latest',
-  },
+    ecmaVersion: 'latest'
+  }
 }

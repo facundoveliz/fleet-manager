@@ -3,7 +3,7 @@ import {
   getAllClients,
   getClient,
   registerClient,
-  deleteClient,
+  deleteClient
 } from '../controllers/client'
 import { tryCatch } from '../utils/tryCatch'
 

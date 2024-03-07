@@ -11,8 +11,7 @@ interface ShipmentAttributes {
 export default (sequelize: any, DataTypes: any) => {
   class Shipment
     extends Model<ShipmentAttributes>
-    implements ShipmentAttributes
-  {
+    implements ShipmentAttributes {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -22,15 +21,15 @@ export default (sequelize: any, DataTypes: any) => {
     description!: string
     weight!: number
     status!: 'pending' | 'transit' | 'delivered'
-    static associate(models: any) {
+    static associate (models: any) {
       Shipment.hasMany(models.Order)
       Shipment.belongsTo(models.Client, {
         as: 'sender',
-        foreignKey: 'senderId',
+        foreignKey: 'senderId'
       })
       Shipment.belongsTo(models.Client, {
         as: 'receiver',
-        foreignKey: 'receiverId',
+        foreignKey: 'receiverId'
       })
     }
   }
@@ -39,7 +38,7 @@ export default (sequelize: any, DataTypes: any) => {
       shipmentId: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
       },
       description: {
         type: DataTypes.TEXT,
@@ -48,9 +47,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Description cannot be empty' },
           len: {
             args: [10, 500],
-            msg: 'Description should be at least 10 and up to 500 characters long.',
-          },
-        },
+            msg: 'Description should be at least 10 and up to 500 characters long.'
+          }
+        }
       },
       weight: {
         type: DataTypes.FLOAT,
@@ -59,26 +58,26 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Weight cannot be empty' },
           min: {
             args: [0.1],
-            msg: 'Weight should be greater than or equal to 0.1 kg',
+            msg: 'Weight should be greater than or equal to 0.1 kg'
           },
           max: {
             args: [999.9],
-            msg: 'Weight should be less than or equal to 999.9 kg',
-          },
-        },
+            msg: 'Weight should be less than or equal to 999.9 kg'
+          }
+        }
       },
       status: {
         type: DataTypes.ENUM('pending', 'transit', 'delivered'),
         allowNull: false,
         validate: {
-          notEmpty: { msg: 'Status cannot be empty' },
-        },
-      },
+          notEmpty: { msg: 'Status cannot be empty' }
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'Shipment',
-    },
+      modelName: 'Shipment'
+    }
   )
   return Shipment
 }

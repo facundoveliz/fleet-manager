@@ -23,7 +23,7 @@ export default (sequelize: any, DataTypes: any) => {
     lastName!: string
     phone!: string
     email!: string
-    static associate(models: any) {
+    static associate (models: any) {
       Client.hasMany(models.Order)
     }
   }
@@ -33,7 +33,7 @@ export default (sequelize: any, DataTypes: any) => {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
+        allowNull: false
       },
       company: {
         type: DataTypes.STRING,
@@ -43,9 +43,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Company name cannot be empty' },
           len: {
             args: [3, 255],
-            msg: 'Company name must be between 3 and 255 characters',
-          },
-        },
+            msg: 'Company name must be between 3 and 255 characters'
+          }
+        }
       },
       firstName: {
         type: DataTypes.STRING,
@@ -55,9 +55,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'First name cannot be empty' },
           len: {
             args: [3, 25],
-            msg: 'First name must be between 3 and 25 characters',
-          },
-        },
+            msg: 'First name must be between 3 and 25 characters'
+          }
+        }
       },
       lastName: {
         type: DataTypes.STRING,
@@ -67,9 +67,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Last name cannot be empty' },
           len: {
             args: [3, 25],
-            msg: 'Last name must be between 3 and 25 characters',
-          },
-        },
+            msg: 'Last name must be between 3 and 25 characters'
+          }
+        }
       },
       phone: {
         type: DataTypes.STRING,
@@ -78,9 +78,9 @@ export default (sequelize: any, DataTypes: any) => {
           notEmpty: { msg: 'Phone cannot be empty' },
           is: {
             args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
-            msg: 'Invalid phone number format',
-          },
-        },
+            msg: 'Invalid phone number format'
+          }
+        }
       },
       email: {
         type: DataTypes.STRING,
@@ -88,14 +88,14 @@ export default (sequelize: any, DataTypes: any) => {
         unique: true,
         validate: {
           notEmpty: { msg: 'Email cannot be empty' },
-          isEmail: { msg: 'Invalid email format' },
-        },
-      },
+          isEmail: { msg: 'Invalid email format' }
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'Client',
-    },
+      modelName: 'Client'
+    }
   )
   return Client
 }

@@ -9,14 +9,14 @@ const Client = db.Client
 export const getAllShipments = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const shipments = await Shipment.findAll()
   const response = SuccessResponse(
     res,
     200,
     'Shipments retrieved successfully',
-    shipments,
+    shipments
   )
   return response
 }
@@ -24,7 +24,7 @@ export const getAllShipments = async (
 export const getShipment = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const shipment = await Shipment.findByPk(req.params.id)
   if (shipment === null) {
@@ -34,7 +34,7 @@ export const getShipment = async (
       res,
       200,
       'Shipment retrieved successfully',
-      shipment,
+      shipment
     )
     return response
   }
@@ -43,12 +43,12 @@ export const getShipment = async (
 export const createShipment = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | void> => {
   // Check if the sender and receiver already exists
   const [existingSender, existingReceiver] = await Promise.all([
     Client.findOne({ where: { clientId: req.body.senderId } }),
-    Client.findOne({ where: { clientId: req.body.receiverId } }),
+    Client.findOne({ where: { clientId: req.body.receiverId } })
   ])
 
   if (!existingSender) {
@@ -64,7 +64,7 @@ export const createShipment = async (
     weight: req.body.weight,
     status: req.body.status,
     senderId: req.body.senderId,
-    receiverId: req.body.receiverId,
+    receiverId: req.body.receiverId
   })
 
   return SuccessResponse(res, 200, 'Shipment created successfully', shipment)
@@ -73,12 +73,12 @@ export const createShipment = async (
 export const deleteShipment = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const shipment = await Shipment.destroy({
     where: {
-      shipmentId: req.params.shipmentId,
-    },
+      shipmentId: req.params.shipmentId
+    }
   })
   if (shipment === 1) {
     const response = SuccessResponse(res, 200, 'Shipment deleted', shipment)

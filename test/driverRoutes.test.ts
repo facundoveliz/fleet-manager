@@ -23,7 +23,7 @@ describe('Get All Drivers', () => {
           lastName: `Doe${index}`,
           email: `johndoe${index}@example.com`,
           password: 'password',
-          phone: `${1234567890 + index}`,
+          phone: `${1234567890 + index}`
         })
     }
   })
@@ -44,8 +44,8 @@ describe('Get All Drivers', () => {
           firstName: expect.any(String),
           lastName: expect.any(String),
           email: expect.any(String),
-          phone: expect.any(String),
-        }),
+          phone: expect.any(String)
+        })
       )
     })
   })
@@ -61,7 +61,7 @@ describe('Get Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
     createdDriver = response.body.data.driverId
   })
@@ -102,7 +102,7 @@ describe('Register Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
 
     expect(response.statusCode).toBe(200)
@@ -115,7 +115,7 @@ describe('Register Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
 
     const response = await request(app).post('/api/drivers/register').send({
@@ -123,7 +123,7 @@ describe('Register Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
 
     expect(response.statusCode).toBe(400)
@@ -135,7 +135,7 @@ describe('Register Driver', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john@example.com',
-      phone: '1234567890',
+      phone: '1234567890'
     })
 
     expect(response.statusCode).toBe(500)
@@ -147,12 +147,12 @@ describe('Register Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: '123',
-      phone: '1234567890',
+      phone: '1234567890'
     })
 
     expect(response.statusCode).toBe(400)
     expect(response.body.message).toBe(
-      'Validation error: Password must be between 8 and 64 characters',
+      'Validation error: Password must be between 8 and 64 characters'
     )
   })
 })
@@ -165,7 +165,7 @@ describe('Login Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
   })
 
@@ -176,7 +176,7 @@ describe('Login Driver', () => {
   it('should log in a valid driver', async () => {
     const response = await request(app).post('/api/drivers/login').send({
       email: 'john@example.com',
-      password: 'password',
+      password: 'password'
     })
 
     expect(response.statusCode).toBe(200)
@@ -186,7 +186,7 @@ describe('Login Driver', () => {
   it('should fail if email is not valid', async () => {
     const response = await request(app).post('/api/drivers/login').send({
       email: 'invalid@example.com',
-      password: 'password',
+      password: 'password'
     })
 
     expect(response.statusCode).toBe(400)
@@ -196,7 +196,7 @@ describe('Login Driver', () => {
   it('should fail if password is not valid', async () => {
     const response = await request(app).post('/api/drivers/login').send({
       email: 'john@example.com',
-      password: 'invalid',
+      password: 'invalid'
     })
 
     expect(response.statusCode).toBe(400)
@@ -214,7 +214,7 @@ describe('Delete Driver', () => {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'password',
-      phone: '1234567890',
+      phone: '1234567890'
     })
     createdDriver = response.body.data.driverId
   })

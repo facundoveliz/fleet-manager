@@ -8,14 +8,14 @@ const Client = db.Client
 export const getAllClients = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const clients = await Client.findAll()
   const response = SuccessResponse(
     res,
     200,
     'Clients retrieved successfully',
-    clients,
+    clients
   )
   return response
 }
@@ -23,7 +23,7 @@ export const getAllClients = async (
 export const getClient = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const client = await Client.findByPk(req.params.id)
   if (!client) {
@@ -33,7 +33,7 @@ export const getClient = async (
       res,
       200,
       'Client retrieved successfully',
-      client,
+      client
     )
     return response
   }
@@ -42,7 +42,7 @@ export const getClient = async (
 export const registerClient = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   // Check if the email does not exist
   let client = await Client.findOne({ where: { email: req.body.email } })
@@ -57,14 +57,14 @@ export const registerClient = async (
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     phone: req.body.phone,
-    email: req.body.email,
+    email: req.body.email
   })
 
   const response = SuccessResponse(
     res,
     200,
     'Client created successfully',
-    client,
+    client
   )
   return response
 }
@@ -72,19 +72,19 @@ export const registerClient = async (
 export const deleteClient = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const clientDeletedCount = await Client.destroy({
     where: {
-      clientId: req.params.id,
-    },
+      clientId: req.params.id
+    }
   })
   if (clientDeletedCount === 1) {
     const response = SuccessResponse(
       res,
       200,
       'Client deleted',
-      clientDeletedCount,
+      clientDeletedCount
     )
     return response
   }

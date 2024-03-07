@@ -10,17 +10,17 @@ const Driver = db.Driver
 export const getAllDrivers = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const drivers = await Driver.findAll({
-    attributes: ['firstName', 'lastName', 'email', 'phone'], // Exclude sensitive data
+    attributes: ['firstName', 'lastName', 'email', 'phone'] // Exclude sensitive data
   })
 
   const response = SuccessResponse(
     res,
     200,
     'Drivers retrieved successfully',
-    drivers,
+    drivers
   )
   return response
 }
@@ -28,7 +28,7 @@ export const getAllDrivers = async (
 export const getDriver = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const driver = await Driver.findByPk(req.params.id)
   if (driver === null) {
@@ -38,7 +38,7 @@ export const getDriver = async (
       res,
       200,
       'Driver retrieved successfully',
-      driver,
+      driver
     )
     return response
   }
@@ -47,11 +47,11 @@ export const getDriver = async (
 export const registerDriver = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | void> => {
   // Check if the email already exists
-  let existingDriver = await Driver.findOne({
-    where: { email: req.body.email },
+  const existingDriver = await Driver.findOne({
+    where: { email: req.body.email }
   })
   if (existingDriver) {
     throw new ErrorResponse(400, false, 'Email already exists')
@@ -66,7 +66,7 @@ export const registerDriver = async (
     throw new ErrorResponse(
       400,
       false,
-      'Validation error: Password must be between 8 and 64 characters',
+      'Validation error: Password must be between 8 and 64 characters'
     )
   }
 
@@ -77,7 +77,7 @@ export const registerDriver = async (
     email: req.body.email,
     password: hashedPassword,
     phone: req.body.phone,
-    VehicleId: req.body.VehicleId,
+    VehicleId: req.body.VehicleId
   })
 
   return SuccessResponse(res, 200, 'Driver created successfully', newDriver)
@@ -86,15 +86,15 @@ export const registerDriver = async (
 export const loginDriver = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse | void> => {
   const { email, password } = req.body
 
   // checks if the email is valid
   const driver: any = await Driver.findOne({
     where: {
-      email,
-    },
+      email
+    }
   })
 
   // if the email doesn't exists, the func ends here
@@ -111,17 +111,17 @@ export const loginDriver = async (
   // generate token and set it to expire in 30 days
   const token = jwt.sign(
     { _id: driver.id },
-    process.env.JWT_PRIVATE_KEY as string,
+    process.env.JWT_PRIVATE_KEY!,
     {
-      expiresIn: '30d',
-    },
+      expiresIn: '30d'
+    }
   )
 
   const response = SuccessResponse(
     res,
     200,
     'Driver logged successfully',
-    token,
+    token
   )
   return response
 }
@@ -129,12 +129,12 @@ export const loginDriver = async (
 export const deleteDriver = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<Response | ErrorResponse> => {
   const driver = await Driver.destroy({
     where: {
-      driverId: req.params.id,
-    },
+      driverId: req.params.id
+    }
   })
   if (driver === 1) {
     const response = SuccessResponse(res, 200, 'Driver deleted', driver)

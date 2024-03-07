@@ -23,7 +23,7 @@ describe('Get All Vehicles', () => {
           model: `Model${index}`,
           location: `Location${index}`,
           status: 'operational',
-          capacity: index,
+          capacity: index
         })
     }
   })
@@ -45,8 +45,8 @@ describe('Get All Vehicles', () => {
           model: expect.any(String),
           location: expect.any(String),
           status: expect.any(String),
-          capacity: expect.any(Number),
-        }),
+          capacity: expect.any(Number)
+        })
       )
     })
   })
@@ -62,7 +62,7 @@ describe('Get Vehicle', () => {
       model: 'Test Model',
       location: 'Test Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
     createdVehicle = response.body.data.vehicleId
   })
@@ -103,7 +103,7 @@ describe('Create Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
 
     expect(response.statusCode).toBe(200)
@@ -116,7 +116,7 @@ describe('Create Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
 
     const response = await request(app).post('/api/vehicles/create').send({
@@ -124,7 +124,7 @@ describe('Create Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
 
     expect(response.statusCode).toBe(400)
@@ -137,12 +137,12 @@ describe('Create Vehicle', () => {
       model: null,
       location: 'Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
 
     expect(response.statusCode).toBe(500)
     expect(response.body.message).toBe(
-      'notNull Violation: Vehicle.model cannot be null',
+      'notNull Violation: Vehicle.model cannot be null'
     )
   })
 })
@@ -157,7 +157,7 @@ describe('Delete Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100,
+      capacity: 100
     })
     createdVehicle = response.body.data.vehicleId
   })
@@ -168,7 +168,7 @@ describe('Delete Vehicle', () => {
 
   it('should delete a vehicle successfully', async () => {
     const response = await request(app).delete(
-      `/api/vehicles/${createdVehicle}`,
+      `/api/vehicles/${createdVehicle}`
     )
 
     expect(response.statusCode).toBe(200)
