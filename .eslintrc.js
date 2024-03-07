@@ -16,6 +16,7 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: ["client"],
   parserOptions: {
     ecmaVersion: 'latest',
   },

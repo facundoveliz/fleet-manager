@@ -11,5 +11,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["client"]
+  "include": ["**/**.js"],
+  "exclude": ["./client"]
 }

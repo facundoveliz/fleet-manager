@@ -1,4 +1,5 @@
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 module.exports = {
   development: {
@@ -8,7 +9,7 @@ module.exports = {
     host: process.env.DB_HOST,
     secret: process.env.JWT_PRIVATE_KEY,
     dialect: 'sqlite',
-    storage: 'fleet-manager.sqlite3',
+    storage: 'fleet-manager.sqlite3'
   },
   test: {
     username: process.env.DB_USER,
@@ -17,7 +18,7 @@ module.exports = {
     secret: process.env.JWT_PRIVATE_KEY,
     host: process.env.DB_HOST,
     dialect: 'sqlite',
-    storage: 'fleet-manager-test.sqlite3',
+    storage: 'fleet-manager-test.sqlite3'
   },
   production: {
     username: process.env.DB_USER,
@@ -25,6 +26,6 @@ module.exports = {
     database: process.env.DB_NAME,
     secret: process.env.JWT_PRIVATE_KEY,
     host: process.env.DB_HOST,
-    dialect: 'sqlite',
-  },
+    dialect: 'sqlite'
+  }
 }
