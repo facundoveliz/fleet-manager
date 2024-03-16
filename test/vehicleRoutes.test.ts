@@ -1,20 +1,30 @@
-import express from 'express'
-import request from 'supertest'
-import dotenv from 'dotenv'
-import db from '../models'
-import vehicleRoutes from '../routes/vehicle'
+import express from 'express';
+import request from 'supertest';
+import dotenv from 'dotenv';
+import Vehicle from '../models/vehicle';
+import Order from '../models/order';
+import vehicleRoutes from '../routes/vehicle';
+import { Sequelize } from 'sequelize-typescript';
 
-const app = express()
-app.use(express.json())
-app.use('/api/vehicles/', vehicleRoutes)
+const app = express();
+app.use(express.json());
+app.use('/api/vehicles/', vehicleRoutes);
 
-dotenv.config()
+dotenv.config();
 
-const Vehicle = db.Vehicle
+new Sequelize({
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  dialect: 'sqlite',
+  storage: 'fleet-manager-tests.sqlite',
+  models: [Vehicle, Order],
+});
 
 describe('Get All Vehicles', () => {
   beforeAll(async () => {
-    await Vehicle.sync({ force: true })
+    await Vehicle.sync({ force: true });
     for (let index = 0; index < 5; index++) {
       await request(app)
         .post('/api/vehicles/new')
@@ -23,21 +33,21 @@ describe('Get All Vehicles', () => {
           model: `Model${index}`,
           location: `Location${index}`,
           status: 'operational',
-          capacity: index
-        })
+          capacity: index,
+        });
     }
-  })
+  });
 
   afterEach(async () => {
-    await Vehicle.sync({ force: true })
-  })
+    await Vehicle.sync({ force: true });
+  });
 
   it('should retrieve all vehicles correctly', async () => {
-    const response = await request(app).get('/api/vehicles')
+    const response = await request(app).get('/api/vehicles');
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.message).toEqual('Vehicles retrieved successfully')
-    expect(Array.isArray(response.body.data)).toBeTruthy()
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual('Vehicles retrieved successfully');
+    expect(Array.isArray(response.body.data)).toBeTruthy();
     response.body.data.forEach((item: any) => {
       expect(item).toEqual(
         expect.objectContaining({
@@ -45,57 +55,57 @@ describe('Get All Vehicles', () => {
           model: expect.any(String),
           location: expect.any(String),
           status: expect.any(String),
-          capacity: expect.any(Number)
-        })
-      )
-    })
-  })
-})
+          capacity: expect.any(Number),
+        }),
+      );
+    });
+  });
+});
 
 describe('Get Vehicle', () => {
-  let createdVehicle: number
+  let createdVehicle: number;
 
   beforeAll(async () => {
-    await Vehicle.sync({ force: true })
+    await Vehicle.sync({ force: true });
     const response = await request(app).post('/api/vehicles/create').send({
       licencePlate: 'ABC-123',
       model: 'Test Model',
       location: 'Test Location',
       status: 'operational',
-      capacity: 100
-    })
-    createdVehicle = response.body.data.vehicleId
-  })
+      capacity: 100,
+    });
+    createdVehicle = response.body.data.vehicleId;
+  });
 
   afterEach(async () => {
-    await Vehicle.sync({ force: true })
-  })
+    await Vehicle.sync({ force: true });
+  });
 
   it('should retrieve the correct vehicle', async () => {
-    const response = await request(app).get(`/api/vehicles/${createdVehicle}`)
+    const response = await request(app).get(`/api/vehicles/${createdVehicle}`);
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.message).toEqual('Vehicle retrieved successfully')
-    expect(response.body.data.vehicleId).toEqual(createdVehicle)
-  })
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual('Vehicle retrieved successfully');
+    expect(response.body.data.vehicleId).toEqual(createdVehicle);
+  });
 
   it('should return a 404 error when trying to retrieve a non-existent vehicle', async () => {
-    const invalidId = 99999
-    const response = await request(app).get(`/api/vehicles/${invalidId}`)
+    const invalidId = 99999;
+    const response = await request(app).get(`/api/vehicles/${invalidId}`);
 
-    expect(response.statusCode).toBe(404)
-    expect(response.body.message).toEqual('Vehicle not found')
-  })
-})
+    expect(response.statusCode).toBe(404);
+    expect(response.body.message).toEqual('Vehicle not found');
+  });
+});
 
 describe('Create Vehicle', () => {
   beforeAll(async () => {
-    await Vehicle.sync({ force: true })
-  })
+    await Vehicle.sync({ force: true });
+  });
 
   afterEach(async () => {
-    await Vehicle.sync({ force: true })
-  })
+    await Vehicle.sync({ force: true });
+  });
 
   it('should create a new vehicle', async () => {
     const response = await request(app).post('/api/vehicles/create').send({
@@ -103,12 +113,12 @@ describe('Create Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100
-    })
+      capacity: 100,
+    });
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.message).toEqual('Vehicle created successfully')
-  })
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual('Vehicle created successfully');
+  });
 
   it('should fail if licence plate already exists', async () => {
     await request(app).post('/api/vehicles/create').send({
@@ -116,20 +126,20 @@ describe('Create Vehicle', () => {
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100
-    })
+      capacity: 100,
+    });
 
     const response = await request(app).post('/api/vehicles/create').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100
-    })
+      capacity: 100,
+    });
 
-    expect(response.statusCode).toBe(400)
-    expect(response.body.message).toBe('Licence plate already exists')
-  })
+    expect(response.statusCode).toBe(400);
+    expect(response.body.message).toBe('Licence plate already exists');
+  });
 
   it('should fail if model is not provided', async () => {
     const response = await request(app).post('/api/vehicles/create').send({
@@ -137,50 +147,46 @@ describe('Create Vehicle', () => {
       model: null,
       location: 'Location',
       status: 'operational',
-      capacity: 100
-    })
+      capacity: 100,
+    });
 
-    expect(response.statusCode).toBe(500)
-    expect(response.body.message).toBe(
-      'notNull Violation: Vehicle.model cannot be null'
-    )
-  })
-})
+    expect(response.statusCode).toBe(500);
+    expect(response.body.message).toBe('notNull Violation: Vehicle.model cannot be null');
+  });
+});
 
 describe('Delete Vehicle', () => {
-  let createdVehicle: any
+  let createdVehicle: any;
 
   beforeAll(async () => {
-    await Vehicle.sync({ force: true })
+    await Vehicle.sync({ force: true });
     const response = await request(app).post('/api/vehicles/create').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
       status: 'operational',
-      capacity: 100
-    })
-    createdVehicle = response.body.data.vehicleId
-  })
+      capacity: 100,
+    });
+    createdVehicle = response.body.data.vehicleId;
+  });
 
   afterEach(async () => {
-    await Vehicle.sync({ force: true })
-  })
+    await Vehicle.sync({ force: true });
+  });
 
   it('should delete a vehicle successfully', async () => {
-    const response = await request(app).delete(
-      `/api/vehicles/${createdVehicle}`
-    )
+    const response = await request(app).delete(`/api/vehicles/${createdVehicle}`);
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body.message).toEqual('Vehicle deleted')
-    expect(response.body.data).toEqual(createdVehicle)
-  })
+    expect(response.statusCode).toBe(200);
+    expect(response.body.message).toEqual('Vehicle deleted');
+    expect(response.body.data).toEqual(createdVehicle);
+  });
 
   it('should return a 404 error when trying to delete a non-existent vehicle', async () => {
-    const invalidId = 99999
-    const response = await request(app).delete(`/api/vehicles/${invalidId}`)
+    const invalidId = 99999;
+    const response = await request(app).delete(`/api/vehicles/${invalidId}`);
 
-    expect(response.statusCode).toBe(404)
-    expect(response.body.message).toEqual('Vehicle not found')
-  })
-})
+    expect(response.statusCode).toBe(404);
+    expect(response.body.message).toEqual('Vehicle not found');
+  });
+});

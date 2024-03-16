@@ -1,10 +1,8 @@
 import { type Response, type NextFunction, type Request } from 'express'
-import db from '../models'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
-
-const Shipment = db.Shipment
-const Client = db.Client
+import Shipment from '../models/shipment'
+import Client from '../models/client'
 
 export const getAllShipments = async (
   req: Request,
@@ -45,10 +43,12 @@ export const createShipment = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
+  const { description, weight, status, senderId, receiverId } = req.body
+
   // Check if the sender and receiver already exists
   const [existingSender, existingReceiver] = await Promise.all([
-    Client.findOne({ where: { clientId: req.body.senderId } }),
-    Client.findOne({ where: { clientId: req.body.receiverId } })
+    Client.findOne({ where: { clientId: senderId } }),
+    Client.findOne({ where: { clientId: receiverId } })
   ])
 
   if (!existingSender) {
@@ -60,11 +60,9 @@ export const createShipment = async (
   }
 
   const shipment = await Shipment.create({
-    description: req.body.description,
-    weight: req.body.weight,
-    status: req.body.status,
-    senderId: req.body.senderId,
-    receiverId: req.body.receiverId
+    ...req.body,
+    senderId: existingSender.clientId,
+    receiverId: existingReceiver.clientId,
   })
 
   return SuccessResponse(res, 200, 'Shipment created successfully', shipment)

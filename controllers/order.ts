@@ -1,10 +1,8 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
-import db from '../models'
-
-const Order = db.Order
-const Client = db.Client
+import Order from '../models/order'
+import Client from '../models/client'
 
 export const getAllOrders = async (
   req: Request,
@@ -45,12 +43,14 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
+  const { origin, destination, distance, duration, date, status, vehicleId, driverId, shipmentId, clientId } = req.body
+
   const [existingVehicle, existingDriver, existingShipment, existingClient] =
     await Promise.all([
-      Client.findOne({ where: { clientId: req.body.vehicleId } }),
-      Client.findOne({ where: { clientId: req.body.driverId } }),
-      Client.findOne({ where: { clientId: req.body.shipmentId } }),
-      Client.findOne({ where: { clientId: req.body.clientId } })
+      Client.findOne({ where: { clientId: vehicleId } }),
+      Client.findOne({ where: { clientId: driverId } }),
+      Client.findOne({ where: { clientId: shipmentId } }),
+      Client.findOne({ where: { clientId } })
     ])
 
   if (!existingVehicle) throw new ErrorResponse(404, false, 'Vehicle not found')
@@ -58,18 +58,20 @@ export const createOrder = async (
   if (!existingShipment) { throw new ErrorResponse(404, false, 'Shipment not found') }
   if (!existingClient) { throw new ErrorResponse(404, false, 'Driver Client found') }
 
-  const order = await Order.create({
-    origin: req.body.origin,
-    destination: req.body.destination,
-    distance: req.body.distance,
-    duration: req.body.duration,
-    date: req.body.date,
-    status: req.body.status,
-    vehicleId: req.body.vehicleId,
-    driverId: req.body.driverId,
-    shipmentId: req.body.shipmentId,
-    clientId: req.body.clientId
-  })
+  const orderData = {
+    origin,
+    destination,
+    distance,
+    duration,
+    date,
+    status,
+    vehicleId,
+    driverId,
+    shipmentId,
+    clientId
+  }
+
+  const order = await Order.create(orderData as Order)
 
   const response = SuccessResponse(
     res,

@@ -1,9 +1,7 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
-import db from '../models'
-
-const Client = db.Client
+import Client from '../models/client'
 
 export const getAllClients = async (
   req: Request,
@@ -44,21 +42,23 @@ export const registerClient = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
-  // Check if the email does not exist
-  let client = await Client.findOne({ where: { email: req.body.email } })
-  // If the email exists, end the function here
+  const { company, firstName, lastName, phone, email } = req.body
+
+  let client = await Client.findOne({ where: { email } })
+
   if (client !== null) {
     throw new ErrorResponse(400, false, 'Email already exists')
   }
 
-  // Create the new client
-  client = await Client.create({
-    company: req.body.company,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    phone: req.body.phone,
-    email: req.body.email
-  })
+  const clientData = {
+    company,
+    firstName,
+    lastName,
+    phone,
+    email
+  }
+
+  client = await Client.create(clientData as Client)
 
   const response = SuccessResponse(
     res,

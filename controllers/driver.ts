@@ -1,11 +1,9 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import db from '../models'
+import Driver from '../models/driver'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
-
-const Driver = db.Driver
 
 export const getAllDrivers = async (
   req: Request,

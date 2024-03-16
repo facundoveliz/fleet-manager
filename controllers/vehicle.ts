@@ -1,9 +1,7 @@
 import { type Response, type NextFunction, type Request } from 'express'
 import SuccessResponse from '../utils/success'
 import ErrorResponse from '../utils/error'
-import db from '../models'
-
-const Vehicle = db.Vehicle
+import Vehicle from '../models/vehicle'
 
 export const getAllVehicles = async (
   _req: Request,
@@ -48,20 +46,24 @@ export const createVehicle = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | ErrorResponse> => {
+  const { licencePlate, model, location, status, capacity } = req.body
+
   const existingLicencePlate = await Vehicle.findOne({
-    where: { licencePlate: req.body.licencePlate }
+    where: { licencePlate }
   })
   if (existingLicencePlate) {
     throw new ErrorResponse(400, false, 'Licence plate already exists')
   }
 
-  const vehicle = await Vehicle.create({
-    licencePlate: req.body.licencePlate,
-    model: req.body.model,
-    location: req.body.location,
-    status: req.body.status,
-    capacity: req.body.capacity || 0
-  })
+  const vehicleData = {
+    licencePlate,
+    model,
+    location,
+    status,
+    capacity
+  }
+
+  const vehicle = await Vehicle.create(vehicleData as Vehicle)
   const response = SuccessResponse(
     res,
     200,
