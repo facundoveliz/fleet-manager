@@ -7,7 +7,7 @@
     "enabled": true,
     "formatWithErrors": true,
     "indentStyle": "space",
-    "indentSize": 2,
+    "indentWidth": 2,
     "lineWidth": 140
   },
   "javascript": {
@@ -15,8 +15,6 @@
       "quoteStyle": "single",
       "jsxQuoteStyle": "single"
     },
-    "globals": [
-      "__DEV__"
-    ]
+    "globals": ["__DEV__"]
   }
 }

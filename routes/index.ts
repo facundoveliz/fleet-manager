@@ -1,15 +1,15 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import driverRoutes from './driver'
-import vehicleRoutes from './vehicle'
-import orderRoutes from './order'
-import clientRoutes from './client'
+import driverRoutes from './driver';
+import vehicleRoutes from './vehicle';
+import orderRoutes from './order';
+import clientRoutes from './client';
 
-const router: Router = Router()
+const router: Router = Router();
 
-router.use('/api/drivers', driverRoutes)
-router.use('/api/vehicles', vehicleRoutes)
-router.use('/api/deliveries', orderRoutes)
-router.use('/api/clients', clientRoutes)
+router.use('/api/drivers', driverRoutes);
+router.use('/api/vehicles', vehicleRoutes);
+router.use('/api/deliveries', orderRoutes);
+router.use('/api/clients', clientRoutes);
 
-export default router
+export default router;

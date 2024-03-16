@@ -1,9 +1,9 @@
-import { DataTypes } from 'sequelize'
-import { BelongsTo, Column, Table, Model, ForeignKey } from 'sequelize-typescript'
-import Driver from './driver'
-import Client from './client'
-import Vehicle from './vehicle'
-import Shipment from './shipment'
+import { DataTypes } from 'sequelize';
+import { BelongsTo, Column, Table, Model, ForeignKey } from 'sequelize-typescript';
+import Driver from './driver';
+import Client from './client';
+import Vehicle from './vehicle';
+import Shipment from './shipment';
 
 @Table
 export default class Order extends Model<Order> {
@@ -11,27 +11,27 @@ export default class Order extends Model<Order> {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    unique: true
+    unique: true,
   })
-    orderId: number
+  orderId: number;
 
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      notEmpty: { msg: 'Origin cannot be empty' }
-    }
+      notEmpty: { msg: 'Origin cannot be empty' },
+    },
   })
-    origin: string
+  origin: string;
 
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      notEmpty: { msg: 'Destination cannot be empty' }
-    }
+      notEmpty: { msg: 'Destination cannot be empty' },
+    },
   })
-    destination: string
+  destination: string;
 
   @Column({
     type: DataTypes.FLOAT,
@@ -39,11 +39,11 @@ export default class Order extends Model<Order> {
     validate: {
       min: {
         args: [0],
-        msg: 'Distance must be greater than or equal to zero'
-      }
-    }
+        msg: 'Distance must be greater than or equal to zero',
+      },
+    },
   })
-    distance: number
+  distance: number;
 
   @Column({
     type: DataTypes.INTEGER,
@@ -51,39 +51,39 @@ export default class Order extends Model<Order> {
     validate: {
       min: {
         args: [0],
-        msg: 'Duration must be greater than or equal to zero'
-      }
-    }
+        msg: 'Duration must be greater than or equal to zero',
+      },
+    },
   })
-    duration: number
+  duration: number;
 
   @Column({
     type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
-      isDate: { args: false, msg: 'Date must be a valid date' }
-    }
+      isDate: { args: false, msg: 'Date must be a valid date' },
+    },
   })
-    date: Date
+  date: Date;
 
   @Column({
     type: DataTypes.ENUM('pending', 'transit', 'delivered'),
     allowNull: false,
     validate: {
-      notEmpty: { msg: 'Status cannot be empty' }
-    }
+      notEmpty: { msg: 'Status cannot be empty' },
+    },
   })
-    status: 'pending' | 'transit' | 'delivered'
+  status: 'pending' | 'transit' | 'delivered';
 
   @ForeignKey(() => Client)
-    clientId: number
+  clientId: number;
 
   @ForeignKey(() => Vehicle)
-    vehicleId: number
+  vehicleId: number;
 
   @ForeignKey(() => Driver)
-    driverId: number
+  driverId: number;
 
   @ForeignKey(() => Shipment)
-    shipmentId: number
+  shipmentId: number;
 }

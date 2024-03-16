@@ -8,23 +8,12 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./",
-    "typeRoots": [
-      "./node_modules/@types/",
-      "./types"
-    ],
+    "typeRoots": ["./node_modules/@types/", "./types"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "**/**.ts",
-    "**/**.tsx",
-    "**/**.js",
-    "**/**.jsx",
-    "**.eslintrc.ts"
-  ],
-  "exclude": [
-    "./client"
-  ]
+  "include": ["**/**.ts", "**/**.tsx", "**/**.js", "**/**.jsx", "**.eslintrc.ts"],
+  "exclude": ["./client"]
 }

@@ -1,6 +1,6 @@
-import { DataTypes } from 'sequelize'
-import { Table, Column, Model, HasMany } from 'sequelize-typescript'
-import Order from './order'
+import { DataTypes } from 'sequelize';
+import { Table, Column, Model, HasMany } from 'sequelize-typescript';
+import Order from './order';
 
 @Table
 export default class Vehicle extends Model<Vehicle> {
@@ -8,9 +8,9 @@ export default class Vehicle extends Model<Vehicle> {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-    unique: true
+    unique: true,
   })
-    vehicleId: number
+  vehicleId: number;
 
   @Column({
     type: DataTypes.STRING,
@@ -20,11 +20,11 @@ export default class Vehicle extends Model<Vehicle> {
       notEmpty: { msg: 'Licence plate cannot be empty' },
       is: {
         args: /^[A-Z]{3}-\d{3}$/i,
-        msg: 'License plate must be in format XXX-YYY (3 letters followed by 3 digits)'
-      }
-    }
+        msg: 'License plate must be in format XXX-YYY (3 letters followed by 3 digits)',
+      },
+    },
   })
-    licencePlate: string
+  licencePlate: string;
 
   @Column({
     type: DataTypes.STRING,
@@ -33,40 +33,40 @@ export default class Vehicle extends Model<Vehicle> {
       notEmpty: { msg: 'Model name cannot be empty' },
       len: {
         args: [2, 50],
-        msg: 'Model name must be between 2 and 50 characters'
-      }
-    }
+        msg: 'Model name must be between 2 and 50 characters',
+      },
+    },
   })
-    model: string
+  model: string;
 
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      notEmpty: { msg: 'Location cannot be empty' }
-    }
+      notEmpty: { msg: 'Location cannot be empty' },
+    },
   })
-    location: string
+  location: string;
 
   @Column({
     type: DataTypes.ENUM('operational', 'inactive'),
     allowNull: false,
     validate: {
-      notEmpty: { msg: 'Status cannot be empty' }
-    }
+      notEmpty: { msg: 'Status cannot be empty' },
+    },
   })
-    status: 'operational' | 'inactive'
+  status: 'operational' | 'inactive';
 
   @Column({
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
       notEmpty: { msg: 'Capacity cannot be empty' },
-      min: { args: [1], msg: 'Capacity must be at least 1' }
-    }
+      min: { args: [1], msg: 'Capacity must be at least 1' },
+    },
   })
-    capacity: number
+  capacity: number;
 
   @HasMany(() => Order)
-    ordersId: Order[]
+  ordersId: Order[];
 }

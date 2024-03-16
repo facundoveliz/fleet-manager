@@ -1,16 +1,16 @@
-import { DataTypes } from 'sequelize'
-import { Table, Column, Model, HasMany, BelongsTo } from 'sequelize-typescript'
-import Order from './order'
-import Client from './client'
+import { DataTypes } from 'sequelize';
+import { Table, Column, Model, HasMany, BelongsTo } from 'sequelize-typescript';
+import Order from './order';
+import Client from './client';
 
 @Table
 export default class Shipment extends Model<Shipment> {
   @Column({
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   })
-    shipmentId: number
+  shipmentId: number;
 
   @Column({
     type: DataTypes.TEXT,
@@ -19,11 +19,11 @@ export default class Shipment extends Model<Shipment> {
       notEmpty: { msg: 'Description cannot be empty' },
       len: {
         args: [10, 500],
-        msg: 'Description should be at least 10 and up to 500 characters long.'
-      }
-    }
+        msg: 'Description should be at least 10 and up to 500 characters long.',
+      },
+    },
   })
-    description: string
+  description: string;
 
   @Column({
     type: DataTypes.FLOAT,
@@ -32,15 +32,15 @@ export default class Shipment extends Model<Shipment> {
       notEmpty: { msg: 'Weight cannot be empty' },
       min: {
         args: [0.1],
-        msg: 'Weight should be greater than or equal to 0.1 kg'
+        msg: 'Weight should be greater than or equal to 0.1 kg',
       },
       max: {
         args: [999.9],
-        msg: 'Weight should be less than or equal to 999.9 kg'
-      }
-    }
+        msg: 'Weight should be less than or equal to 999.9 kg',
+      },
+    },
   })
-    weight: number
+  weight: number;
 
   @Column({
     type: DataTypes.ENUM('pending', 'transit', 'delivered'),
@@ -49,18 +49,18 @@ export default class Shipment extends Model<Shipment> {
       notEmpty: { msg: 'Description cannot be empty' },
       len: {
         args: [10, 500],
-        msg: 'Description should be at least 10 and up to 500 characters long.'
-      }
-    }
+        msg: 'Description should be at least 10 and up to 500 characters long.',
+      },
+    },
   })
-    status: 'pending' | 'transit' | 'delivered'
+  status: 'pending' | 'transit' | 'delivered';
 
   @HasMany(() => Order)
-    ordersId: Order[]
+  ordersId: Order[];
 
   @BelongsTo(() => Client, { foreignKey: 'senderId' })
-    senderId: Client[]
+  senderId: Client[];
 
   @BelongsTo(() => Client, { foreignKey: 'receiverId' })
-    receiverId: Client[]
+  receiverId: Client[];
 }

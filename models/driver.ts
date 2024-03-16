@@ -1,35 +1,35 @@
-import { DataTypes } from 'sequelize'
-import { Column, HasMany, Model, Table } from 'sequelize-typescript'
-import Order from './order'
+import { DataTypes } from 'sequelize';
+import { Column, HasMany, Model, Table } from 'sequelize-typescript';
+import Order from './order';
 
 @Table
 export default class Driver extends Model {
   @Column({
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   })
-    driverId: number
+  driverId: number;
 
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notEmpty: { msg: 'First name cannot be empty' },
-      len: { args: [3, 25], msg: 'First name must be 3-25 characters' }
-    }
+      len: { args: [3, 25], msg: 'First name must be 3-25 characters' },
+    },
   })
-    firstName: string
+  firstName: string;
 
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
       notEmpty: { msg: 'Last name cannot be empty' },
-      len: { args: [3, 25], msg: 'Last name must be 3-25 characters' }
-    }
+      len: { args: [3, 25], msg: 'Last name must be 3-25 characters' },
+    },
   })
-    lastName: string
+  lastName: string;
 
   @Column({
     type: DataTypes.STRING,
@@ -37,10 +37,10 @@ export default class Driver extends Model {
     unique: true,
     validate: {
       notEmpty: { msg: 'Email cannot be empty' },
-      isEmail: { msg: 'Invalid email format' }
-    }
+      isEmail: { msg: 'Invalid email format' },
+    },
   })
-    email: string
+  email: string;
 
   @Column({
     type: DataTypes.STRING(64),
@@ -48,12 +48,12 @@ export default class Driver extends Model {
     validate: {
       len: {
         args: [8, 64],
-        msg: 'Password must be between 8 and 64 characters'
+        msg: 'Password must be between 8 and 64 characters',
       },
-      notEmpty: { msg: 'Password cannot be empty' }
-    }
+      notEmpty: { msg: 'Password cannot be empty' },
+    },
   })
-    password: string
+  password: string;
 
   @Column({
     type: DataTypes.STRING,
@@ -62,12 +62,12 @@ export default class Driver extends Model {
       notEmpty: { msg: 'Phone cannot be empty' },
       is: {
         args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
-        msg: 'Invalid phone number format'
-      }
-    }
+        msg: 'Invalid phone number format',
+      },
+    },
   })
-    phone: string
+  phone: string;
 
   @HasMany(() => Order)
-    ordersId: Order[]
+  ordersId: Order[];
 }
