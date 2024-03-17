@@ -1,5 +1,5 @@
 /node_modules
 /dist
 .env
-fleet-manager.sqlite3
-fleet-manager-test.sqlite3
+fleet-manager.sqlite
+fleet-manager-tests.sqlite
