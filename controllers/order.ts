@@ -21,35 +21,32 @@ export const getOrder = async (req: Request, res: Response, next: NextFunction):
 };
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
-  const { origin, destination, distance, duration, date, status, vehicleId, driverId, shipmentId, clientId } = req.body;
+  const { origin, destination, distance, date, status, description, weight, vehicleId, driverId, senderId, receiverId } = req.body;
 
-  const [existingVehicle, existingDriver, existingShipment, existingClient] = await Promise.all([
+  const [existingVehicle, existingDriver, existingSender, existingReceiver] = await Promise.all([
     Client.findOne({ where: { clientId: vehicleId } }),
     Client.findOne({ where: { clientId: driverId } }),
-    Client.findOne({ where: { clientId: shipmentId } }),
-    Client.findOne({ where: { clientId } }),
+    Client.findOne({ where: { clientId: senderId } }),
+    Client.findOne({ where: { clientId: receiverId } }),
   ]);
 
   if (!existingVehicle) throw new ErrorResponse(404, false, 'Vehicle not found');
   if (!existingDriver) throw new ErrorResponse(404, false, 'Driver not found');
-  if (!existingShipment) {
-    throw new ErrorResponse(404, false, 'Shipment not found');
-  }
-  if (!existingClient) {
-    throw new ErrorResponse(404, false, 'Driver Client found');
-  }
+  if (!existingSender) throw new ErrorResponse(404, false, 'Sender not found');
+  if (!existingReceiver) throw new ErrorResponse(404, false, 'Receiver not found');
 
   const orderData = {
     origin,
     destination,
     distance,
-    duration,
     date,
     status,
+    description,
+    weight,
     vehicleId,
     driverId,
-    shipmentId,
-    clientId,
+    senderId: existingSender.clientId,
+    receiverId: existingReceiver.clientId,
   };
 
   const order = await Order.create(orderData as Order);

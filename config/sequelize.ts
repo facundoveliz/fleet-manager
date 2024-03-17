@@ -6,7 +6,6 @@ dotenv.config();
 import Client from '../models/client';
 import Driver from '../models/driver';
 import Order from '../models/order';
-import Shipment from '../models/shipment';
 import Vehicle from '../models/vehicle';
 
 const sequelize = new Sequelize({
@@ -16,7 +15,7 @@ const sequelize = new Sequelize({
   host: process.env.DB_HOST,
   dialect: 'sqlite',
   storage: 'fleet-manager.sqlite',
-  models: [Client, Driver, Order, Shipment, Vehicle],
+  models: [Client, Driver, Order, Vehicle],
 });
 
 export default sequelize;

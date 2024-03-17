@@ -3,7 +3,6 @@ import { BelongsTo, Column, Table, Model, ForeignKey } from 'sequelize-typescrip
 import Driver from './driver';
 import Client from './client';
 import Vehicle from './vehicle';
-import Shipment from './shipment';
 
 @Table
 export default class Order extends Model<Order> {
@@ -46,18 +45,6 @@ export default class Order extends Model<Order> {
   distance: number;
 
   @Column({
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    validate: {
-      min: {
-        args: [0],
-        msg: 'Duration must be greater than or equal to zero',
-      },
-    },
-  })
-  duration: number;
-
-  @Column({
     type: DataTypes.DATEONLY,
     allowNull: false,
     validate: {
@@ -75,15 +62,45 @@ export default class Order extends Model<Order> {
   })
   status: 'pending' | 'transit' | 'delivered';
 
-  @ForeignKey(() => Client)
-  clientId: number;
+  @Column({
+    type: DataTypes.TEXT,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Description cannot be empty' },
+      len: {
+        args: [10, 500],
+        msg: 'Description should be at least 10 and up to 500 characters long.',
+      },
+    },
+  })
+  description: string;
+
+  @Column({
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    validate: {
+      notEmpty: { msg: 'Weight cannot be empty' },
+      min: {
+        args: [0.1],
+        msg: 'Weight should be greater than or equal to 0.1 kg',
+      },
+      max: {
+        args: [999.9],
+        msg: 'Weight should be less than or equal to 999.9 kg',
+      },
+    },
+  })
+  weight: number;
+
+  @BelongsTo(() => Client, { foreignKey: 'senderId' })
+  senderId: number;
+
+  @BelongsTo(() => Client, { foreignKey: 'receiverId' })
+  receiverId: number;
 
   @ForeignKey(() => Vehicle)
   vehicleId: number;
 
   @ForeignKey(() => Driver)
   driverId: number;
-
-  @ForeignKey(() => Shipment)
-  shipmentId: number;
 }
