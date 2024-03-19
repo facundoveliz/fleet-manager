@@ -53,7 +53,7 @@ describe('Get All Vehicles', () => {
 describe('Get Vehicle', () => {
   let createdVehicle: number;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Vehicle.sync({ force: true });
     const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
@@ -146,7 +146,7 @@ describe('Create a new Vehicle', () => {
 describe('Delete Vehicle', () => {
   let createdVehicle: any;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Vehicle.sync({ force: true });
     const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',

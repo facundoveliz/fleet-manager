@@ -51,7 +51,7 @@ describe('Get All Drivers', () => {
 describe('Get Driver', () => {
   let createdDriver: any;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Driver.sync({ force: true });
     const response = await request(app).post('/api/drivers/new').send({
       firstName: 'John',
@@ -137,7 +137,7 @@ describe('New Driver', () => {
 describe('Delete Driver', () => {
   let createdDriver: any;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Driver.sync({ force: true });
     const response = await request(app).post('/api/drivers/new').send({
       firstName: 'John',

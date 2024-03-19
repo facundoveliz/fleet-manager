@@ -53,7 +53,7 @@ describe('Get All Clients', () => {
 describe('Get Client', () => {
   let createdClient: number;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Client.sync({ force: true });
     const response = await request(app).post('/api/clients/new').send({
       company: 'Company',
@@ -65,7 +65,7 @@ describe('Get Client', () => {
     createdClient = response.body.data.clientId;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await Client.sync({ force: true });
   });
 
@@ -146,7 +146,7 @@ describe('New Client', () => {
 describe('Delete Client', () => {
   let createdClient: any;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     await Client.sync({ force: true });
     const response = await request(app).post('/api/clients/new').send({
       company: 'Company',

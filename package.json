@@ -6,10 +6,10 @@
   "author": "Facundo Veliz <facundoveliz9@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "server": "nodemon --exec ts-node ./server.ts",
+    "server": "bun --watch run server.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts --fix --ignore-pattern client",
-    "test": "jest --runInBand ./test/*"
+    "test": "bun test test/*"
   },
   "dependencies": {
     "@typescript-eslint/parser": "^7.1.1",
@@ -25,7 +25,6 @@
     "sequelize": "^6.32.1",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.6",
-    "ts-node": "^10.9.1",
     "typescript": "*"
   },
   "devDependencies": {

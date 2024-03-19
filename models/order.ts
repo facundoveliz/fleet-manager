@@ -109,14 +109,14 @@ export default class Order extends Model<Order> {
   driverId: number;
 
   @BelongsTo(() => Client, { foreignKey: 'senderId' })
-  sender: Client;
+  sender: Client[];
 
   @BelongsTo(() => Client, { foreignKey: 'receiverId' })
-  receiver: Client;
+  receiver: Client[];
 
   @BelongsTo(() => Vehicle, { foreignKey: 'vehicleId' })
-  vehicle: Vehicle;
+  vehicle: Vehicle[];
 
   @BelongsTo(() => Driver, { foreignKey: 'driverId' })
-  driver: Driver;
+  driver: Driver[];
 }
