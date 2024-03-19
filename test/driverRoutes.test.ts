@@ -1,26 +1,14 @@
 import express from 'express';
 import request from 'supertest';
-import dotenv from 'dotenv';
-import Driver from '../models/driver';
-import Order from '../models/order';
 import driverRoutes from '../routes/driver';
-import { Sequelize } from 'sequelize-typescript';
+import Driver from '../models/driver';
+import createSequelizeInstance from './utils/sequelize';
 
 const app = express();
 app.use(express.json());
 app.use('/api/drivers/', driverRoutes);
 
-dotenv.config();
-
-new Sequelize({
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  dialect: 'sqlite',
-  storage: 'fleet-manager-tests.sqlite',
-  models: [Driver, Order],
-});
+createSequelizeInstance();
 
 describe('Get All Drivers', () => {
   beforeAll(async () => {

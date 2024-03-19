@@ -1,26 +1,14 @@
 import express from 'express';
 import request from 'supertest';
-import dotenv from 'dotenv';
-import Vehicle from '../models/vehicle';
-import Order from '../models/order';
 import vehicleRoutes from '../routes/vehicle';
-import { Sequelize } from 'sequelize-typescript';
+import Vehicle from '../models/vehicle';
+import createSequelizeInstance from './utils/sequelize';
 
 const app = express();
 app.use(express.json());
 app.use('/api/vehicles/', vehicleRoutes);
 
-dotenv.config();
-
-new Sequelize({
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  dialect: 'sqlite',
-  storage: 'fleet-manager-tests.sqlite',
-  models: [Vehicle, Order],
-});
+createSequelizeInstance();
 
 describe('Get All Vehicles', () => {
   beforeAll(async () => {
@@ -67,13 +55,14 @@ describe('Get Vehicle', () => {
 
   beforeAll(async () => {
     await Vehicle.sync({ force: true });
-    const response = await request(app).post('/api/vehicles/create').send({
+    const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: 'Test Model',
       location: 'Test Location',
       status: 'operational',
       capacity: 100,
     });
+    console.log(response.body.data)
     createdVehicle = response.body.data.vehicleId;
   });
 
@@ -98,7 +87,7 @@ describe('Get Vehicle', () => {
   });
 });
 
-describe('Create Vehicle', () => {
+describe('Create a new Vehicle', () => {
   beforeAll(async () => {
     await Vehicle.sync({ force: true });
   });
@@ -108,7 +97,7 @@ describe('Create Vehicle', () => {
   });
 
   it('should create a new vehicle', async () => {
-    const response = await request(app).post('/api/vehicles/create').send({
+    const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
@@ -121,7 +110,7 @@ describe('Create Vehicle', () => {
   });
 
   it('should fail if licence plate already exists', async () => {
-    await request(app).post('/api/vehicles/create').send({
+    await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
@@ -129,7 +118,7 @@ describe('Create Vehicle', () => {
       capacity: 100,
     });
 
-    const response = await request(app).post('/api/vehicles/create').send({
+    const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
@@ -142,7 +131,7 @@ describe('Create Vehicle', () => {
   });
 
   it('should fail if model is not provided', async () => {
-    const response = await request(app).post('/api/vehicles/create').send({
+    const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: null,
       location: 'Location',
@@ -160,7 +149,7 @@ describe('Delete Vehicle', () => {
 
   beforeAll(async () => {
     await Vehicle.sync({ force: true });
-    const response = await request(app).post('/api/vehicles/create').send({
+    const response = await request(app).post('/api/vehicles/new').send({
       licencePlate: 'ABC-123',
       model: 'Model',
       location: 'Location',
