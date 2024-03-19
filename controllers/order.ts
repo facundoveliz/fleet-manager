@@ -58,7 +58,7 @@ export const newOrder = async (req: Request, res: Response, next: NextFunction):
 export const deleteOrder = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
   const rowsDeleted = await Order.destroy({
     where: {
-      id: req.params.id,
+      orderId: req.params.id,
     },
   });
   if (rowsDeleted === 1) {

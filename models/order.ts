@@ -45,15 +45,6 @@ export default class Order extends Model<Order> {
   distance: number;
 
   @Column({
-    type: DataTypes.DATEONLY,
-    allowNull: false,
-    validate: {
-      isDate: { args: false, msg: 'Date must be a valid date' },
-    },
-  })
-  date: Date;
-
-  @Column({
     type: DataTypes.ENUM('pending', 'transit', 'delivered'),
     allowNull: false,
     validate: {
@@ -63,13 +54,22 @@ export default class Order extends Model<Order> {
   status: 'pending' | 'transit' | 'delivered';
 
   @Column({
+    type: DataTypes.DATE,
+    allowNull: true,
+    validate: {
+      isDate: { args: false, msg: 'Date must be a valid date' },
+    },
+  })
+  deliveredAt: Date;
+
+  @Column({
     type: DataTypes.TEXT,
     allowNull: false,
     validate: {
       notEmpty: { msg: 'Description cannot be empty' },
       len: {
-        args: [10, 500],
-        msg: 'Description should be at least 10 and up to 500 characters long.',
+        args: [3, 500],
+        msg: 'Description should be at least 3 and up to 500 characters long.',
       },
     },
   })
@@ -85,22 +85,38 @@ export default class Order extends Model<Order> {
         msg: 'Weight should be greater than or equal to 0.1 kg',
       },
       max: {
-        args: [999.9],
-        msg: 'Weight should be less than or equal to 999.9 kg',
+        args: [1999.9],
+        msg: 'Weight should be less than or equal to 1999.9 kg',
       },
     },
   })
   weight: number;
 
-  @BelongsTo(() => Client, { foreignKey: 'senderId' })
+  @ForeignKey(() => Client)
+  @Column
   senderId: number;
 
-  @BelongsTo(() => Client, { foreignKey: 'receiverId' })
+  @ForeignKey(() => Client)
+  @Column
   receiverId: number;
 
   @ForeignKey(() => Vehicle)
+  @Column
   vehicleId: number;
 
   @ForeignKey(() => Driver)
+  @Column
   driverId: number;
+
+  @BelongsTo(() => Client, { foreignKey: 'senderId' })
+  sender: Client;
+
+  @BelongsTo(() => Client, { foreignKey: 'receiverId' })
+  receiver: Client;
+
+  @BelongsTo(() => Vehicle, { foreignKey: 'vehicleId' })
+  vehicle: Vehicle;
+
+  @BelongsTo(() => Driver, { foreignKey: 'driverId' })
+  driver: Driver;
 }
