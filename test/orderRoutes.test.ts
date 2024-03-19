@@ -78,8 +78,6 @@ beforeAll(async () => {
         senderId: sender.body.data.clientId,
         receiverId: receiver.body.data.clientId,
       });
-
-    console.log(order.body.data)
   }
 });
 
@@ -208,7 +206,6 @@ describe('New Order', () => {
 describe('Delete Order', () => {
   it('should delete an order successfully', async () => {
     const response = await request(app).delete(`/api/orders/1`);
-    console.log(response)
 
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toEqual('Order deleted');
