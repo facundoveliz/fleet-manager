@@ -28,7 +28,6 @@ export default class Client extends Model<Client> {
 
   @Column({
     type: DataTypes.STRING,
-    field: 'name',
     allowNull: false,
     validate: {
       notEmpty: { msg: 'First name cannot be empty' },
@@ -42,7 +41,6 @@ export default class Client extends Model<Client> {
 
   @Column({
     type: DataTypes.STRING,
-    field: 'name',
     allowNull: false,
     validate: {
       notEmpty: { msg: 'Last name cannot be empty' },

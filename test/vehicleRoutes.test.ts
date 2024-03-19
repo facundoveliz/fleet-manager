@@ -62,7 +62,6 @@ describe('Get Vehicle', () => {
       status: 'operational',
       capacity: 100,
     });
-    console.log(response.body.data)
     createdVehicle = response.body.data.vehicleId;
   });
 

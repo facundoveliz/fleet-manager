@@ -21,7 +21,7 @@ app.listen(port, () => {
 });
 
 sequelize
-  .sync({ force: true })
+  .sync()
   .then(() => {
     console.log('Connection has been established successfully.');
     console.log('All models were synchronized successfully.');
