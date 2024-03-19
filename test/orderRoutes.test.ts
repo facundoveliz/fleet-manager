@@ -64,7 +64,7 @@ beforeAll(async () => {
         capacity: index + 1,
       });
 
-    const order = await request(app)
+    await request(app)
       .post('/api/orders/new')
       .send({
         origin: `Origin${index}`,
