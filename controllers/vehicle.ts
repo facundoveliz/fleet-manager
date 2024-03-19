@@ -23,7 +23,7 @@ export const getVehicle = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const createVehicle = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
+export const newVehicle = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
   const { licencePlate, model, location, status, capacity } = req.body;
 
   const existingLicencePlate = await Vehicle.findOne({

@@ -27,7 +27,7 @@ describe('Get All Clients', () => {
     await Client.sync({ force: true });
     for (let index = 0; index < 5; index++) {
       await request(app)
-        .post('/api/clients/register')
+        .post('/api/clients/new')
         .send({
           company: `Company${index}`,
           firstName: `John${index}`,
@@ -67,7 +67,7 @@ describe('Get Client', () => {
 
   beforeAll(async () => {
     await Client.sync({ force: true });
-    const response = await request(app).post('/api/clients/register').send({
+    const response = await request(app).post('/api/clients/new').send({
       company: 'Company',
       firstName: 'John',
       lastName: 'Doe',
@@ -98,7 +98,7 @@ describe('Get Client', () => {
   });
 });
 
-describe('Register Client', () => {
+describe('New Client', () => {
   beforeAll(async () => {
     await Client.sync({ force: true });
   });
@@ -107,8 +107,8 @@ describe('Register Client', () => {
     await Client.sync({ force: true });
   });
 
-  it('should register a new client', async () => {
-    const response = await request(app).post('/api/clients/register').send({
+  it('should create a new client', async () => {
+    const response = await request(app).post('/api/clients/new').send({
       company: 'Company',
       firstName: 'John',
       lastName: 'Doe',
@@ -121,7 +121,7 @@ describe('Register Client', () => {
   });
 
   it('should fail if email already exists', async () => {
-    await request(app).post('/api/clients/register').send({
+    await request(app).post('/api/clients/new').send({
       company: 'Company',
       firstName: 'John',
       lastName: 'Doe',
@@ -129,7 +129,7 @@ describe('Register Client', () => {
       email: 'johndoe@example.com',
     });
 
-    const response = await request(app).post('/api/clients/register').send({
+    const response = await request(app).post('/api/clients/new').send({
       company: 'Company',
       firstName: 'John',
       lastName: 'Doe',
@@ -142,7 +142,7 @@ describe('Register Client', () => {
   });
 
   it('should fail if company is not provided', async () => {
-    const response = await request(app).post('/api/clients/register').send({
+    const response = await request(app).post('/api/clients/new').send({
       company: null,
       firstName: 'John',
       lastName: 'Doe',
@@ -160,7 +160,7 @@ describe('Delete Client', () => {
 
   beforeAll(async () => {
     await Client.sync({ force: true });
-    const response = await request(app).post('/api/clients/register').send({
+    const response = await request(app).post('/api/clients/new').send({
       company: 'Company',
       firstName: 'John',
       lastName: 'Doe',

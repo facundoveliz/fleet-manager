@@ -19,7 +19,7 @@ export const getClient = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export const registerClient = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
+export const newClient = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
   const { company, firstName, lastName, phone, email } = req.body;
 
   let client = await Client.findOne({ where: { email } });

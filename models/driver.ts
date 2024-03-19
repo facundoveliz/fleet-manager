@@ -43,19 +43,6 @@ export default class Driver extends Model {
   email: string;
 
   @Column({
-    type: DataTypes.STRING(64),
-    allowNull: false,
-    validate: {
-      len: {
-        args: [8, 64],
-        msg: 'Password must be between 8 and 64 characters',
-      },
-      notEmpty: { msg: 'Password cannot be empty' },
-    },
-  })
-  password: string;
-
-  @Column({
     type: DataTypes.STRING,
     allowNull: false,
     validate: {

@@ -20,8 +20,8 @@ export const getOrder = async (req: Request, res: Response, next: NextFunction):
   }
 };
 
-export const createOrder = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
-  const { origin, destination, distance, date, status, description, weight, vehicleId, driverId, senderId, receiverId } = req.body;
+export const newOrder = async (req: Request, res: Response, next: NextFunction): Promise<Response | ErrorResponse> => {
+  const { origin, destination, distance, status, deliveredAt, description, weight, vehicleId, driverId, senderId, receiverId } = req.body;
 
   const [existingVehicle, existingDriver, existingSender, existingReceiver] = await Promise.all([
     Client.findOne({ where: { clientId: vehicleId } }),
@@ -39,8 +39,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     origin,
     destination,
     distance,
-    date,
     status,
+    deliveredAt,
     description,
     weight,
     vehicleId,
