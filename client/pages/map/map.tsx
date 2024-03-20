@@ -7,7 +7,7 @@ export default function Map() {
       center={{ lat: 51.5084643445558, lng: -0.1277097778591926 }}
       zoom={13}
       scrollWheelZoom={true}
-      className='h-[700px] w-11/12'
+      className='h-[400px] w-[400px]'
     >
       <TileLayer
         attribution="© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>"
