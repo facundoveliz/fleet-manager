@@ -16,5 +16,26 @@
       "jsxQuoteStyle": "single"
     },
     "globals": ["__DEV__"]
+  },
+  "linter": {
+    "enabled": true,
+    "ignore": ["node_modules"],
+    "rules": {
+      "all": true,
+      "complexity": {
+        "noUselessFragments": "off"
+      },
+      "style": {
+        "useSingleVarDeclarator": "off",
+        "noParameterAssign": "off",
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "nursery": {
+        "all": false
+      }
+    }
   }
 }

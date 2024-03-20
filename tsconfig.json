@@ -14,6 +14,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/**.ts", "**/**.tsx", "**/**.js", "**/**.jsx", "**.eslintrc.ts"],
+  "include": ["**/**.ts", "**/**.tsx", "**/**.js", "**/**.jsx"],
   "exclude": ["./client"]
 }
