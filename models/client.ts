@@ -15,12 +15,12 @@ export default class Client extends Model<Client> {
   @Column({
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
     validate: {
       notEmpty: { msg: 'Company name cannot be empty' },
       len: {
-        args: [3, 255],
-        msg: 'Company name must be between 3 and 255 characters',
+        args: [2, 255],
+        msg: 'Company name must be between 2 and 255 characters',
       },
     },
   })
@@ -32,8 +32,8 @@ export default class Client extends Model<Client> {
     validate: {
       notEmpty: { msg: 'First name cannot be empty' },
       len: {
-        args: [3, 25],
-        msg: 'First name must be between 3 and 25 characters',
+        args: [2, 25],
+        msg: 'First name must be between 2 and 25 characters',
       },
     },
   })
@@ -45,8 +45,8 @@ export default class Client extends Model<Client> {
     validate: {
       notEmpty: { msg: 'Last name cannot be empty' },
       len: {
-        args: [3, 25],
-        msg: 'Last name must be between 3 and 25 characters',
+        args: [2, 25],
+        msg: 'Last name must be between 2 and 25 characters',
       },
     },
   })

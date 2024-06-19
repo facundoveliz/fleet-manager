@@ -48,7 +48,7 @@ export default class Driver extends Model {
     validate: {
       notEmpty: { msg: 'Phone cannot be empty' },
       is: {
-        args: /^(\+?\d{1,4}[-\s]?)?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{4}$/i,
+        args: /^\+?\d{1,3}[-.\s]?\d{2,3}[-.\s]?\d{3,4}[-.\s]?\d{4,9}$/,
         msg: 'Invalid phone number format',
       },
     },

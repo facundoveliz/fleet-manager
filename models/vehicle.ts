@@ -32,8 +32,8 @@ export default class Vehicle extends Model<Vehicle> {
     validate: {
       notEmpty: { msg: 'Model name cannot be empty' },
       len: {
-        args: [2, 50],
-        msg: 'Model name must be between 2 and 50 characters',
+        args: [1, 50],
+        msg: 'Model name must be between 1 and 50 characters',
       },
     },
   })
